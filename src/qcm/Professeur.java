@@ -9,6 +9,6 @@ package qcm;
  *
  * @author toshiba
  */
-public class Professeur {
+public class Professeur extends Personne{
     
 } 

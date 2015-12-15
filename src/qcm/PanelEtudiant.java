@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 package qcm;
-
+import javax.swing.JPanel;
 /**
  *
  * @author toshiba
  */
-public class Etudiant extends Personne{
+public class PanelEtudiant extends JPanel{
     
-} 
+}

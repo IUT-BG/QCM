@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 package qcm;
+import javax.swing.JFrame;
 
 /**
  *
  * @author toshiba
  */
-public class Etudiant extends Personne{
+public class FenetrePrincipal extends JFrame{
     
-} 
+}
