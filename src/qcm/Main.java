@@ -9,7 +9,7 @@ package qcm;
  *
  * @author Basile
  */
-public class QCM {
+public class Main {
 
     /**
      * @param args the command line arguments
