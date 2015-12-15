@@ -5,11 +5,15 @@
  */
 package qcm;
 
+import java.util.ArrayList;
+import qcm.Etudiant;
+
 /**
  *
  * @author toshiba
  */
 public class Classe {
-    
+    private ArrayList<Etudiant> liste;
+    private ArrayList<Qcm> liste_qcm;
 }
  

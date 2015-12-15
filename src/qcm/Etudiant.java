@@ -21,7 +21,9 @@ public class Etudiant extends Personne{
         return classe;
     }
     
-    public void validerRep(Qcm qcm){
+    /*public void validerRep(Qcm qcm){
         
-    }
+    }*/
+    
 }  
+  
