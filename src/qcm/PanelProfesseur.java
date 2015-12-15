@@ -12,4 +12,4 @@ import javax.swing.JPanel;
  */
 public class PanelProfesseur extends JPanel{
     
-}
+} 

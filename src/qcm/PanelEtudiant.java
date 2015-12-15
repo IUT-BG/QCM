@@ -11,4 +11,4 @@ import javax.swing.JPanel;
  */
 public class PanelEtudiant extends JPanel{
     
-}
+} 
