@@ -10,5 +10,5 @@ package qcm;
  * @author toshiba
  */
 public class Note {
-    
+     
 }
