@@ -12,7 +12,7 @@ package Model;
 public class Personne {
     String nom;
     String prenom;
-    private int id;
+    int id;
     
     public Personne(){
         nom = null;
