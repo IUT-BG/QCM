@@ -34,58 +34,76 @@ public class PanelEtudiant extends JPanel {
     Etudiant etu;
     TestQcm test;
     ArrayList<JRadioButton> liste_radio;
-    
+    JScrollPane jsp;
+
     public PanelEtudiant() {
-        affiche_qcm = new JPanel();
         
+        initialisation();
+        affQcm();
+        
+        
+        
+    }
+
+    public void initialisation(){
+        //first panel with the actual QCM
         TitledBorder bord = BorderFactory.createTitledBorder("Qcm");
-        
-        JScrollPane jsp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); 
+
+        jsp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jsp.setBorder(bord);
-        
-        jsp.setPreferredSize(new Dimension(600,400));
-        
+        jsp.setPreferredSize(new Dimension(600, 400));
+
         test = new TestQcm();
+        
+        affiche_qcm = new JPanel();
 
         etu = new Etudiant();
         etu.setQcm(test.getQcm());
-        
-        liste_radio = new ArrayList();
 
-        affQcm();
+        liste_radio = new ArrayList();
         
-        //jsp.add(affiche_qcm);
         jsp.setViewportView(affiche_qcm);
         this.add(jsp);
+        
+        //second panel with list of QCM
     }
-
+    
     public void affQcm() {
         int i = 0;
-        
+
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        c.weighty = 6;
         c.gridx = 0;
         c.gridy = 0;
-        
+
         for (Question q : etu.getQcm().getQ()) {
             c.anchor = GridBagConstraints.WEST;
             c.gridwidth = 10;
-            JLabel label_q = new JLabel(q.getIntitule());
-            affiche_qcm.add(label_q,c);
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
             c.gridy++;
+
             for (Reponse r : q.getReponse()) {
-                c.anchor = GridBagConstraints.EAST;
-                c.gridwidth = 1;
-                JLabel label_r = new JLabel(r.getIntitule());
-                affiche_qcm.add(label_r,c);
-                
-                c.anchor = GridBagConstraints.WEST;
+
+                //c.ipady= 20;
                 c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
                 c.gridx++;
+
                 JRadioButton bt_r = new JRadioButton();
                 liste_radio.add(bt_r);
-                affiche_qcm.add(bt_r,c);
+                affiche_qcm.add(bt_r, c);
+
                 c.gridx++;
                 c.ipadx = 0;
             }
@@ -93,9 +111,10 @@ public class PanelEtudiant extends JPanel {
             c.gridx = 0;
             i++;
         }
-        c.gridy = i*2;
+        c.gridy = i * 2;
         c.gridx = 0;
+
         JButton bt_valid = new JButton("Valider");
-        affiche_qcm.add(bt_valid,c);
+        affiche_qcm.add(bt_valid, c);
     }
 }
