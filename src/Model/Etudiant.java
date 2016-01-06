@@ -35,11 +35,8 @@ public class Etudiant extends Personne{
         
     }
     
-    public void choixQcm(Qcm qcm){
-        //Qcm que eleve veut faire, pour ensuite le remplir
-        
-        /* pour tester en console, on va créer un Qcm factice, on le choisit. 
-        */
+    public void SetQcm(Qcm qcm){
+        this.id_qcm = qcm.getId();
     }
     
     public void afficheQcm(){

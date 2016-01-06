@@ -5,10 +5,13 @@
  */
 package View;
 
+import Model.Etudiant;
 import Model.Qcm;
-import java.awt.Dimension;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
+import Model.Question;
+import Model.Reponse;
+import Test.TestQcm;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -18,9 +21,17 @@ import javax.swing.JPanel;
 public class PanelEtudiant extends JPanel {
     //maj QCM eleve
     Qcm qcm;
+    Etudiant etu;
+    TestQcm test;
 
     public PanelEtudiant() {
+        test = new TestQcm();
         
+        etu = new Etudiant();
+        etu.SetQcm(test.getQcm());
+        
+        JButton but = new JButton("test");
+        this.add(but);
     }
 
         
