@@ -16,10 +16,13 @@ public class Qcm {
     private String titre;
     private int id_prof;
     private ArrayList<Float> note;
+    private ArrayList<Question> q;
 
-    public Qcm(String titre, int id_prof) {
+    public Qcm(String titre, int id_prof, ArrayList<Question> q) {
         this.titre = titre;
         this.id_prof = id_prof;
+        this.q = q;
+        this.note = new ArrayList();
     }
     
     
