@@ -24,6 +24,38 @@ public class Qcm {
         this.q = q;
         this.note = new ArrayList(); 
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public int getId_prof() {
+        return id_prof;
+    }
+
+    public ArrayList<Float> getNote() {
+        return note;
+    }
+
+    public ArrayList<Question> getQ() {
+        return q;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
+    }
+
+    public void setNote(ArrayList<Float> note) {
+        this.note = note;
+    }
+
+    public void setQ(ArrayList<Question> q) {
+        this.q = q;
+    }
     
     
 } 

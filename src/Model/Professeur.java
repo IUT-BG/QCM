@@ -25,4 +25,8 @@ public class Professeur extends Personne{
         
         ResultSet resultSet = connexion.query("SELECT * FROM WORLDCUP;");
     }
+    
+    
+    public void creerQcm
+    
 }  
