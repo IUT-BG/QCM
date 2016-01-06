@@ -15,7 +15,7 @@ public class Qcm {
     private int id;
     private String titre;
     private int id_prof;
-    private ArrayList<Float> note;
+    private ArrayList<Note> note;
     private ArrayList<Question> q;
 
     public Qcm(String titre, int id_prof, ArrayList<Question> q) {
@@ -49,7 +49,7 @@ public class Qcm {
         this.titre = titre;
     }
 
-    public void setNote(ArrayList<Float> note) {
+    public void setNote(ArrayList<Note> note) {
         this.note = note;
     }
 
