@@ -16,5 +16,5 @@ public class Reponse {
     public Reponse(String intitule, boolean valide) {
         this.intitule = intitule;
         this.valide = valide;
-    }
+    } 
 }
