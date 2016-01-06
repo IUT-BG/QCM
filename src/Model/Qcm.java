@@ -37,8 +37,8 @@ public class Qcm {
         return id_prof;
     }
 
-    public ArrayList<Float> getNote() {
-        return note;
+    public ArrayList<Note> getNote() {
+        return this.note;
     }
 
     public ArrayList<Question> getQ() {
