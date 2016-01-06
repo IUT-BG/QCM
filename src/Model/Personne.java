@@ -25,6 +25,14 @@ public class Personne {
         this.prenom = prenom;
         this.id = id;
     }
+    
+    public void Connexion(){
+        return ;
+    }
+    
+    public void Deconnexion(){
+        return ;
+    }
 
     public String getNom() {
         return nom;
