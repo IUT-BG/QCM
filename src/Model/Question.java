@@ -20,5 +20,29 @@ public class Question {
         this.intitule = intitule;
         this.reponse = reponse;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getIntitule() {
+        return intitule;
+    }
+
+    public ArrayList<Reponse> getReponse() {
+        return reponse;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIntitule(String intitule) {
+        this.intitule = intitule;
+    }
+
+    public void setReponse(ArrayList<Reponse> reponse) {
+        this.reponse = reponse;
+    }
     
 } 
