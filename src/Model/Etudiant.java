@@ -10,7 +10,7 @@ package Model;
  */
 public class Etudiant extends Personne{
     public Classe classe;
-    public int id_qcm;
+    public Qcm qcm;
     
     public Etudiant(){
         super();
@@ -35,11 +35,12 @@ public class Etudiant extends Personne{
         
     }
     
-    public void choixQcm(Qcm qcm){
-        //Qcm que eleve veut faire, pour ensuite le remplir
-        
-        /* pour tester en console, on va créer un Qcm factice, on le choisit. 
-        */
+    public void setQcm(Qcm qcm){
+        this.qcm = qcm;
+    }
+    
+    public Qcm getQcm(){
+        return qcm;
     }
     
     public void afficheQcm(){

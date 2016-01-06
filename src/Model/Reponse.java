@@ -17,4 +17,22 @@ public class Reponse {
         this.intitule = intitule;
         this.valide = valide;
     } 
+
+    public String getIntitule() {
+        return intitule;
+    }
+
+    public boolean isValide() {
+        return valide;
+    }
+
+    public void setIntitule(String intitule) {
+        this.intitule = intitule;
+    }
+
+    public void setValide(boolean valide) {
+        this.valide = valide;
+    }
+    
+    
 }

@@ -7,6 +7,7 @@ package View;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -15,10 +16,12 @@ import javax.swing.JFrame;
 public class FenetrePrincipal extends JFrame{
     
     public FenetrePrincipal(){
-        
+        JPanel panel_etu = new PanelEtudiant();
         this.setTitle("Qcm");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
+        
+        this.add(panel_etu);
         
         initialisation();
         rafraichir();

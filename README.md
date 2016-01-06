@@ -1,3 +1,2 @@
 # QCM
-Application QCM effectué dans le cadre d'un projet IUT Lyon 1
-prout
+/!\ Pour faire des tests, utilisé la classe QCM test
