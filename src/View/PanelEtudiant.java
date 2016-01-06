@@ -5,6 +5,7 @@
  */
 package View;
 
+import Model.Classe;
 import Model.Etudiant;
 import Model.Qcm;
 import Model.Question;
@@ -22,6 +23,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -49,9 +51,36 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void initialisation(){
+        /* ATTENTION
+        APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
+        */
+        test = new TestQcm();
+        Classe t_classe = new Classe();
+        t_classe.setNum("2nd2");
+        
+        affiche_qcm = new JPanel();
+
+        etu = new Etudiant(t_classe,"Magand","Louis",1);
+        etu.setQcm(test.getQcm());
+
+        liste_radio = new ArrayList();
+        
         //GridBag
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        
+        //intialisation boutton
+        JButton bt = new JButton("Notes");
+        c.anchor = GridBagConstraints.WEST;
+        this.add(bt,c);
+        
+        JTextArea txt = new JTextArea(etu.getNom()+" "+etu.getPrenom()+" "
+        + etu.getClasse().getNum());
+        
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.EAST;
+        this.add(txt,c);
+                
         
         //second panel with list of QCM
         liste_qcm = new JPanel();
@@ -63,9 +92,10 @@ public class PanelEtudiant extends JPanel {
         
         jsp = new JScrollPane(liste_qcm_etu);
         
+        c.anchor = GridBagConstraints.NONE;
         c.fill = GridBagConstraints.BOTH;
         //c.ipady = 120;
-        c.gridy = 0;
+        c.gridy = 1;
         c.gridx = 0;
         c.weighty = 10;
         c.weightx = 100;
@@ -74,7 +104,7 @@ public class PanelEtudiant extends JPanel {
         liste_qcm.add(jsp,c);
         
         c.gridx = 0;
-        c.gridy = 0;
+        c.gridy = 1;
         c.ipady = 0;
         c.gridheight = 2;
         c.weightx = 0.5;
@@ -98,21 +128,11 @@ public class PanelEtudiant extends JPanel {
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jsp.setBorder(bord);
 
-        
-        /* ATTENTION
-        APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
-        */
-        test = new TestQcm();
-        
-        affiche_qcm = new JPanel();
-
-        etu = new Etudiant();
-        etu.setQcm(test.getQcm());
-
-        liste_radio = new ArrayList();
-        
         jsp.setViewportView(affiche_qcm);
         this.add(jsp, c);
+        
+        /*this.setPreferredSize(new Dimension(liste_qcm.getHeight(), liste_qcm.getWidth()+
+                affiche_qcm.getWidth()+50));*/
     }
     
     public void ajoutListe(){
