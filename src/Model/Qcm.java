@@ -15,14 +15,21 @@ public class Qcm {
     private int id;
     private String titre;
     private int id_prof;
-    private ArrayList<Float> note;
+    private ArrayList<Note> note;
     private ArrayList<Question> q;
 
     public Qcm(String titre, int id_prof, ArrayList<Question> q) {
         this.titre = titre;
         this.id_prof = id_prof;
         this.q = q;
-        this.note = new ArrayList(); 
+        this.note = null; 
+    }
+    
+    public void modifierQcm(ArrayList<Question> nouvelle){
+        if(note == null)
+            this.q = nouvelle;
+        else
+            System.err.println("Modification ipossible : un élève à déjà rempli ce Qcm");
     }
 
     public int getId() {
@@ -37,8 +44,8 @@ public class Qcm {
         return id_prof;
     }
 
-    public ArrayList<Float> getNote() {
-        return note;
+    public ArrayList<Note> getNote() {
+        return this.note;
     }
 
     public ArrayList<Question> getQ() {
@@ -49,8 +56,10 @@ public class Qcm {
         this.titre = titre;
     }
 
-    public void setNote(ArrayList<Float> note) {
-        this.note = note;
+    public void ajouterNote(Note note) {
+        if(note == null)
+            this.note = new ArrayList();
+        this.note.add(note);
     }
 
     public void setQ(ArrayList<Question> q) {
