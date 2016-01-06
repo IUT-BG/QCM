@@ -22,7 +22,7 @@ public class Qcm {
         this.titre = titre;
         this.id_prof = id_prof;
         this.q = q;
-        this.note = new ArrayList();
+        this.note = new ArrayList(); 
     }
     
     
