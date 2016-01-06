@@ -27,14 +27,14 @@ public class TestQcm {
         ArrayList<Question> q = new ArrayList();
         q.add(new Question("Quel est ton prenom ?",r));
         
-        r.clear();
+        r = new ArrayList();
         r.add(new Reponse("Magand",true));
         r.add(new Reponse("Ta maman", false));
         r.add(new Reponse("Jean Jacque",false));
         
         q.add(new Question("Quel est ton nom?",r));
         
-        r.clear();
+        r = new ArrayList();
         r.add(new Reponse("Chien",false));
         r.add(new Reponse("Ta chatte(True)", true));
         r.add(new Reponse("Notre tortue",false));

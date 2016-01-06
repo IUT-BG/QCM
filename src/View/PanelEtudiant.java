@@ -12,7 +12,9 @@ import Model.Reponse;
 import Test.TestQcm;
 import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -25,13 +27,23 @@ public class PanelEtudiant extends JPanel {
     TestQcm test;
 
     public PanelEtudiant() {
+        int i =0;
         test = new TestQcm();
         
         etu = new Etudiant();
-        etu.SetQcm(test.getQcm());
+        etu.setQcm(test.getQcm());
         
-        JButton but = new JButton("test");
-        this.add(but);
+        for(Question q : etu.getQcm().getQ()){
+            JLabel label_q = new JLabel(q.getIntitule());
+            this.add(label_q);
+            for(Reponse r : q.getReponse()){
+                JLabel label_r = new JLabel(r.getIntitule());
+                this.add(label_r);
+                JRadioButton bt_r = new JRadioButton();
+                this.add(bt_r);
+            }
+            i++;
+        }
     }
 
         
