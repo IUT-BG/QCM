@@ -27,6 +27,4 @@ public class Professeur extends Personne{
     }
     
     
-    public void creerQcm
-    
 }  

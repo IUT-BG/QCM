@@ -45,7 +45,7 @@ public class Qcm {
         return q;
     }
 
-    public void setTitre(String titre) {
+    public void setTitre(String titre) { 
         this.titre = titre;
     }
 
