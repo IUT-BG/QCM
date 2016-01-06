@@ -21,30 +21,41 @@ import javax.swing.JRadioButton;
  * @author toshiba
  */
 public class PanelEtudiant extends JPanel {
+
     //maj QCM eleve
     Qcm qcm;
     Etudiant etu;
     TestQcm test;
-
+    ArrayList<JRadioButton> liste_radio;
+    
     public PanelEtudiant() {
-        int i =0;
         test = new TestQcm();
-        
+
         etu = new Etudiant();
         etu.setQcm(test.getQcm());
         
-        for(Question q : etu.getQcm().getQ()){
+        liste_radio = new ArrayList();
+
+        affQcm();
+    }
+
+    public void affQcm() {
+        int i = 0;
+
+        for (Question q : etu.getQcm().getQ()) {
             JLabel label_q = new JLabel(q.getIntitule());
             this.add(label_q);
-            for(Reponse r : q.getReponse()){
+            for (Reponse r : q.getReponse()) {
                 JLabel label_r = new JLabel(r.getIntitule());
                 this.add(label_r);
                 JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
                 this.add(bt_r);
             }
             i++;
         }
-    }
 
-        
+        JButton bt_valid = new JButton("Valider");
+        this.add(bt_valid);
+    }
 }
