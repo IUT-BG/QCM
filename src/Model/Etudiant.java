@@ -10,5 +10,22 @@ package Model;
  * @author toshiba
  */
 public class Etudiant extends Personne{
+    public Classe classe;
+    
+    public Etudiant(){
+        classe = new Classe();
+    }
+    
+    public Etudiant(Classe classe){
+        this.classe = classe;
+    }
+
+    public Classe getClasse() {
+        return classe;
+    }
+
+    public void setClasse(Classe classe) {
+        this.classe = classe;
+    }
     
 }  
