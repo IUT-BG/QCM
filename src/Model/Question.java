@@ -15,6 +15,10 @@ public class Question {
     private int id;
     private String intitule;
     private ArrayList<Reponse> reponse;
-     
+
+    public Question(String intitule, ArrayList<Reponse> reponse) {
+        this.intitule = intitule;
+        this.reponse = reponse;
+    }
     
 } 

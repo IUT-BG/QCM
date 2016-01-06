@@ -14,8 +14,13 @@ import java.util.ArrayList;
 public class Qcm {
     private int id;
     private String titre;
-    private String nom_prof;
+    private int id_prof;
     private ArrayList<Float> note;
+
+    public Qcm(String titre, int id_prof) {
+        this.titre = titre;
+        this.id_prof = id_prof;
+    }
     
-     
+    
 } 
