@@ -5,16 +5,26 @@
  */
 package View;
 
+import Model.Classe;
 import Model.Etudiant;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
 import Test.TestQcm;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 /**
  *
@@ -23,39 +33,342 @@ import javax.swing.JRadioButton;
 public class PanelEtudiant extends JPanel {
 
     //maj QCM eleve
-    Qcm qcm;
+    JPanel affiche_qcm;
+    JPanel liste_qcm;
+    JList liste_qcm_etu;
     Etudiant etu;
     TestQcm test;
     ArrayList<JRadioButton> liste_radio;
-    
+    JScrollPane jsp;
+
     public PanelEtudiant() {
-        test = new TestQcm();
-
-        etu = new Etudiant();
-        etu.setQcm(test.getQcm());
         
-        liste_radio = new ArrayList();
-
+        initialisation();
         affQcm();
+        ajoutListe();
+        
+        
     }
 
+    public void initialisation(){
+        /* ATTENTION
+        APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
+        */
+        test = new TestQcm();
+        Classe t_classe = new Classe();
+        t_classe.setNum("2nd2");
+        
+        affiche_qcm = new JPanel();
+
+        etu = new Etudiant(t_classe,"Magand","Louis",1);
+        etu.setQcm(test.getQcm());
+
+        liste_radio = new ArrayList();
+        
+        //GridBag
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        
+        //intialisation boutton
+        JButton bt = new JButton("Notes");
+        c.anchor = GridBagConstraints.WEST;
+        this.add(bt,c);
+        
+        JTextArea txt = new JTextArea(etu.getNom()+" "+etu.getPrenom()+" "
+        + etu.getClasse().getNum());
+        
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.EAST;
+        this.add(txt,c);
+                
+        
+        //second panel with list of QCM
+        liste_qcm = new JPanel();
+        //Placement scroll dans le panel dans le panel
+        
+        TitledBorder bord = BorderFactory.createTitledBorder("Liste Qcm");
+        
+        liste_qcm_etu = new JList(new DefaultListModel());
+        
+        jsp = new JScrollPane(liste_qcm_etu);
+        
+        c.anchor = GridBagConstraints.NONE;
+        c.fill = GridBagConstraints.BOTH;
+        //c.ipady = 120;
+        c.gridy = 1;
+        c.gridx = 0;
+        c.weighty = 10;
+        c.weightx = 100;
+        
+        liste_qcm.setBorder(bord);
+        liste_qcm.add(jsp,c);
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        c.ipady = 0;
+        c.gridheight = 2;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.BOTH;
+        
+        this.add(liste_qcm, c);
+        
+        //first panel with the actual QCM
+        c.gridheight=1;
+        c.gridx=1;
+        c.weightx = 2;
+        c.weighty = 2;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        
+         bord = BorderFactory.createTitledBorder("Qcm");
+
+        jsp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jsp.setBorder(bord);
+
+        jsp.setViewportView(affiche_qcm);
+        this.add(jsp, c);
+        
+        /*this.setPreferredSize(new Dimension(liste_qcm.getHeight(), liste_qcm.getWidth()+
+                affiche_qcm.getWidth()+50));*/
+    }
+    
+    public void ajoutListe(){
+        ((DefaultListModel)liste_qcm_etu.getModel()).removeAllElements();
+        
+        /*for (Qcm qc : etu.getClasse().getListe_qcm()){
+            ((DefaultListModel)liste_qcm_etu.getModel()).addElement(qc.getTitre());
+        
+            
+        }*/
+        ((DefaultListModel)liste_qcm_etu.getModel()).addElement("caca");
+        ((DefaultListModel)liste_qcm_etu.getModel()).addElement(etu.getQcm().getTitre());
+    }
+    
     public void affQcm() {
         int i = 0;
 
+        affiche_qcm.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+
         for (Question q : etu.getQcm().getQ()) {
-            JLabel label_q = new JLabel(q.getIntitule());
-            this.add(label_q);
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
             for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
                 JLabel label_r = new JLabel(r.getIntitule());
-                this.add(label_r);
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
                 JRadioButton bt_r = new JRadioButton();
                 liste_radio.add(bt_r);
-                this.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
             }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
             i++;
         }
+        
+        for (Question q : etu.getQcm().getQ()) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
+            for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
+                JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
+            }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
+            i++;
+        }
+        
+        for (Question q : etu.getQcm().getQ()) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
+            for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
+                JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
+            }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
+            i++;
+        }
+        
+        for (Question q : etu.getQcm().getQ()) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
+            for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
+                JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
+            }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
+            i++;
+        }
+        
+        for (Question q : etu.getQcm().getQ()) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
+            for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
+                JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
+            }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
+            i++;
+        }
+        
+        for (Question q : etu.getQcm().getQ()) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = 10;
+
+            JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
+            affiche_qcm.add(label_q, c);
+
+            c.gridy++;
+
+            for (Reponse r : q.getReponse()) {
+
+                c.ipady= 20;
+                c.ipadx = 20;
+                c.anchor = GridBagConstraints.WEST;
+                c.gridwidth = 1;
+
+                JLabel label_r = new JLabel(r.getIntitule());
+                affiche_qcm.add(label_r, c);
+
+                c.anchor = GridBagConstraints.WEST;
+                c.gridx++;
+
+                JRadioButton bt_r = new JRadioButton();
+                liste_radio.add(bt_r);
+                affiche_qcm.add(bt_r, c);
+
+                c.gridx++;
+                c.ipadx = 0;
+            }
+            
+            c.gridy = c.gridy + 1;
+            c.gridx = 0;
+            i++;
+        }
+        
+        c.gridy = i * 2;
+        c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
-        this.add(bt_valid);
+        affiche_qcm.add(bt_valid, c);
     }
 }

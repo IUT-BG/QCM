@@ -28,8 +28,8 @@ public class FenetrePrincipal extends JFrame{
     }
     
     public void initialisation(){
-        int sizeX=450;
-        int sizeY=600;
+        int sizeX=650;
+        int sizeY=800;
         System.out.println();
         this.setPreferredSize(new Dimension(sizeX, sizeY));    
     }
