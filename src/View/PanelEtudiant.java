@@ -10,5 +10,5 @@ import javax.swing.JPanel;
  * @author toshiba
  */
 public class PanelEtudiant extends JPanel{
-    
+    //maj QCM eleve
 } 
