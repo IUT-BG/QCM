@@ -12,9 +12,10 @@ import java.util.ArrayList;
  * @author toshiba
  */
 public class Qcm {
-     private int id;
+    private int id;
     private String titre;
     private String nom_prof;
-    private ArrayList<Integer> note;
+    private ArrayList<Float> note;
+    
     
 } 

@@ -4,17 +4,17 @@
  * and open the template in the editor.
  */
 package Model;
-import java.util.ArrayList;
 
 /**
  *
  * @author toshiba
  */
-
-public class Question {
-    private int id;
+public class Reponse {
     private String intitule;
-    private ArrayList<Reponse> reponse;
-    
-    
-} 
+    private boolean valide;
+
+    public Reponse(String intitule, boolean valide) {
+        this.intitule = intitule;
+        this.valide = valide;
+    }
+}
