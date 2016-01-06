@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qcm;
+package Model;
 
 /**
  *
  * @author toshiba
  */
-public class Professeur extends Personne{
-    
-}  
+public class Note {
+     
+}

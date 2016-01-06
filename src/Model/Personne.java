@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qcm;
-import javax.swing.JPanel;
+package Model;
 
 /**
  *
  * @author toshiba
  */
-public class PanelProfesseur extends JPanel{
+public class Personne {
     
 } 
