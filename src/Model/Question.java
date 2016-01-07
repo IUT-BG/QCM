@@ -20,6 +20,12 @@ public class Question {
         this.intitule = null;
         this.reponse = new ArrayList();
     }
+    
+    
+    public Question(String intitule, ArrayList<Reponse> reponse) {
+        this.intitule = intitule;
+        this.reponse = reponse;
+    }
 
     public int getId() {
         return id;
