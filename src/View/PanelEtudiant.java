@@ -14,6 +14,8 @@ import Test.TestQcm;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -82,57 +84,53 @@ public class PanelEtudiant extends JPanel {
         this.add(txt,c);
                 
         
-        //second panel with list of QCM
+        //Placement du panel ListeQcmEtu
         liste_qcm = new JPanel();
-        //Placement scroll dans le panel dans le panel
         
-        TitledBorder bord = BorderFactory.createTitledBorder("Liste Qcm");
+        TitledBorder bord = BorderFactory.createTitledBorder("Liste");
         
         liste_qcm_etu = new JList(new DefaultListModel());
         
-        jsp = new JScrollPane(liste_qcm_etu);
-        
-        c.anchor = GridBagConstraints.NONE;
         c.fill = GridBagConstraints.BOTH;
-        //c.ipady = 120;
-        c.gridy = 1;
-        c.gridx = 0;
-        c.weighty = 10;
-        c.weightx = 100;
-        
-        liste_qcm.setBorder(bord);
-        liste_qcm.add(jsp,c);
-        
         c.gridx = 0;
         c.gridy = 1;
-        c.ipady = 0;
-        c.gridheight = 2;
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.BOTH;
         
         this.add(liste_qcm, c);
         
-        //first panel with the actual QCM
+        //Placement du scroll dans le panneau ListeQcmEtu
+        liste_qcm.setLayout(new GridBagLayout());
+        GridBagConstraints c2 = new GridBagConstraints();
+        
+        jsp = new JScrollPane(liste_qcm_etu);
+        c2.fill = GridBagConstraints.BOTH;
+        c2.gridy = 0;
+        c2.gridx = 0;
+        c2.weighty = 10;
+        
+        liste_qcm.add(jsp,c2);
+        liste_qcm.setBorder(bord);
+        
+        //Placement du panel avec Qcm actuel
+        c.gridy = 1;
         c.gridheight=1;
         c.gridx=1;
         c.weightx = 2;
         c.weighty = 2;
         c.fill = GridBagConstraints.BOTH;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
         
-         bord = BorderFactory.createTitledBorder("Qcm");
+        bord = BorderFactory.createTitledBorder("Qcm");
 
         jsp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jsp.setBorder(bord);
-
+        
         jsp.setViewportView(affiche_qcm);
+        jsp.setColumnHeader(null);
         this.add(jsp, c);
         
-        /*this.setPreferredSize(new Dimension(liste_qcm.getHeight(), liste_qcm.getWidth()+
-                affiche_qcm.getWidth()+50));*/
+                
+        
+        
     }
     
     public void ajoutListe(){
@@ -149,6 +147,7 @@ public class PanelEtudiant extends JPanel {
     
     public void affQcm() {
         int i = 0;
+        int re = 0;
 
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -165,6 +164,10 @@ public class PanelEtudiant extends JPanel {
             c.gridy++;
 
             for (Reponse r : q.getReponse()) {
+                if(c.gridx == 2){
+                    c.gridx = 0;
+                    c.gridy++;
+                }
 
                 c.ipady= 20;
                 c.ipadx = 20;
@@ -175,6 +178,7 @@ public class PanelEtudiant extends JPanel {
                 affiche_qcm.add(label_r, c);
 
                 c.anchor = GridBagConstraints.WEST;
+                
                 c.gridx++;
 
                 JRadioButton bt_r = new JRadioButton();
@@ -188,6 +192,7 @@ public class PanelEtudiant extends JPanel {
             c.gridy = c.gridy + 1;
             c.gridx = 0;
             i++;
+            re++;
         }
         
         for (Question q : etu.getQcm().getQ()) {
@@ -364,8 +369,8 @@ public class PanelEtudiant extends JPanel {
             c.gridx = 0;
             i++;
         }
-        
-        c.gridy = i * 2;
+        System.out.println(i +" et "+re);
+        c.gridy = (i + re)*2;
         c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
