@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controleur.ValidationQcm;
 import Model.Classe;
 import Model.Etudiant;
 import Model.Qcm;
@@ -16,6 +17,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -374,6 +377,14 @@ public class PanelEtudiant extends JPanel {
         c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
+        bt_valid.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ValidationQcm v = new ValidationQcm(liste_radio,test);
+            }
+            
+        });
         affiche_qcm.add(bt_valid, c);
     }
 }
