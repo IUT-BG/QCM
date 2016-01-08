@@ -382,8 +382,11 @@ public class PanelEtudiant extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                int r = 0;
+                
                 VerifReponse v = new VerifReponse(liste_reponse,liste_radio,etu.getQcm());
-                System.out.println(v.verification());
+                float final_note = v.note();
+                System.out.println(final_note);
             }
             
         });

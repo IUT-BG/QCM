@@ -16,29 +16,41 @@ import javax.swing.JRadioButton;
  * @author Louis
  */
 public class VerifReponse {
-    
+
     ArrayList<Reponse> liste_reponse;
     ArrayList<JRadioButton> liste_radio;
     Qcm qcm;
-    
-    public VerifReponse(ArrayList<Reponse> liste_reponse, 
-            ArrayList<JRadioButton> liste_radio, Qcm qcm){
+
+    public VerifReponse(ArrayList<Reponse> liste_reponse,
+            ArrayList<JRadioButton> liste_radio, Qcm qcm) {
         this.liste_reponse = liste_reponse;
         this.liste_radio = liste_radio;
         this.qcm = qcm;
     }
-    
-    public int verification(){
+
+    public float verification() {
         int question = 0;
         int reponse = 0;
-        int note = 0;
-        for(Reponse r : liste_reponse){
-            if(r.isValide() && liste_radio.get(reponse).isSelected())
+        float note = 0;
+        for (Reponse r : liste_reponse) {
+            if (r.isValide() && liste_radio.get(reponse).isSelected()) {
                 note++;
-            else if(!r.isValide() && liste_radio.get(reponse).isSelected())
+            } else if (!r.isValide() && liste_radio.get(reponse).isSelected()) {
                 note--;
+            }
             reponse++;
         }
         return note;
+    }
+
+    public float note() {
+        int r = 0;
+        float score = verification();
+        for (Reponse repon : liste_reponse) {
+            if (repon.isValide()) {
+                r++;
+            }
+        }
+        return score/r*20;
     }
 }
