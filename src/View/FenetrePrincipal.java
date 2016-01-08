@@ -35,7 +35,6 @@ public class FenetrePrincipal extends JFrame{
     }
     
     public void rafraichir(){
-        
         this.pack();
         this.setVisible(true);
     }
