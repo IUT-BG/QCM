@@ -51,6 +51,8 @@ public class VerifReponse {
                 r++;
             }
         }
+        if(score/r*20 < 0)
+            return 0;
         return score/r*20;
     }
 }
