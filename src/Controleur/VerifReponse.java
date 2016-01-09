@@ -17,28 +17,44 @@ import javax.swing.JRadioButton;
  */
 public class VerifReponse {
 
-    ArrayList<Reponse> liste_reponse;
+    ArrayList<Question> liste_question;
     ArrayList<JRadioButton> liste_radio;
+    ArrayList<Reponse> liste_reponse;
+    boolean question_manquante;
     Qcm qcm;
 
-    public VerifReponse(ArrayList<Reponse> liste_reponse,
+    public VerifReponse(ArrayList<Question> liste_question,
             ArrayList<JRadioButton> liste_radio, Qcm qcm) {
-        this.liste_reponse = liste_reponse;
+        this.liste_question = liste_question;
         this.liste_radio = liste_radio;
         this.qcm = qcm;
+        this.liste_reponse = new ArrayList();
+        question_manquante = false;
     }
 
     public float verification() {
         int question = 0;
         int reponse = 0;
         float note = 0;
-        for (Reponse r : liste_reponse) {
-            if (r.isValide() && liste_radio.get(reponse).isSelected()) {
-                note++;
-            } else if (!r.isValide() && liste_radio.get(reponse).isSelected()) {
-                note--;
+        int case_vide = 0;
+        for (Question q : liste_question) {
+            for (Reponse r : liste_question.get(question).getReponse()) {
+                if (r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    note++;
+                } else if (!r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    note--;
+                }
+                else if(!liste_radio.get(reponse).isSelected()){
+                    case_vide++;
+                }
+                liste_reponse.add(r);
+                reponse++;
             }
-            reponse++;
+            if(case_vide == liste_question.get(question).getReponse().size()){
+                question_manquante = true;
+            }
+            case_vide = 0;
+            question++;
         }
         return note;
     }
@@ -51,8 +67,13 @@ public class VerifReponse {
                 r++;
             }
         }
-        if(score/r*20 < 0)
+        if (score / r * 20 < 0) {
             return 0;
-        return score/r*20;
+        }
+        return score / r * 20;
+    }
+    
+    public boolean getNonValide(){
+        return question_manquante;
     }
 }
