@@ -49,7 +49,7 @@ public class PanelEtudiant extends JPanel {
     JList liste_qcm_etu;
     Etudiant etu;
     TestQcm test;
-    ArrayList<Reponse> liste_reponse;
+    ArrayList<Question> liste_question;
     ArrayList<JRadioButton> liste_radio;
     JScrollPane jsp;
 
@@ -81,7 +81,7 @@ public class PanelEtudiant extends JPanel {
         etu = new Etudiant(t_classe, "Magand", "Louis", 1);
         etu.setQcm(test.getQcm());
 
-        liste_reponse = new ArrayList();
+        liste_question = new ArrayList();
         liste_radio = new ArrayList();
 
         //GridBag
@@ -182,6 +182,8 @@ public class PanelEtudiant extends JPanel {
 
             JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
             affiche_qcm.add(label_q, c);
+            
+            liste_question.add(q);
 
             c.gridy++;
 
@@ -208,7 +210,6 @@ public class PanelEtudiant extends JPanel {
 
                 c.gridx++;
                 c.ipadx = 0;
-                liste_reponse.add(r);
                 liste_radio.add(bt_r);
             }
             c.gridy = c.gridy + 1;
@@ -401,9 +402,13 @@ public class PanelEtudiant extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int r = 0;
 
-                VerifReponse v = new VerifReponse(liste_reponse, liste_radio, etu.getQcm());
+                VerifReponse v = new VerifReponse(liste_question, liste_radio, etu.getQcm());
                 float final_note = v.note();
                 System.out.println(final_note);
+                if(v.getNonValide()){
+                    JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
+                    return;
+                }
                 JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
                 etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
                 rafraichissement();
