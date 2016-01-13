@@ -5,10 +5,27 @@
  */
 package Controleur;
 
+import Model.Etudiant;
+import Model.Qcm;
+
 /**
  *
  * @author Louis
  */
 public class EffectuerQcm {
     
+    Qcm qcm;
+    Etudiant etu;
+    
+    public EffectuerQcm(Qcm qcm, Etudiant etu){
+        this.qcm = qcm;
+        this.etu = etu;
+        test();
+    }
+    
+    public void test(){
+        if( etu.getQcm() != null )
+            System.out.println("Veuillez terminer votre Qcm.");
+        else if( qcm.getNote().get(1).)
+    }
 }

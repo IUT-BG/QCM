@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controleur.EffectuerQcm;
 import Controleur.VerifReponse;
 import Model.Classe;
 import Model.Etudiant;
@@ -156,7 +157,7 @@ public class PanelEtudiant extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                EffectuerQcm x = new EffectuerQcm(liste_qcm_etu.get);
+                EffectuerQcm x = new EffectuerQcm((Qcm)liste_qcm_etu.getSelectedValue(), etu);
             }
             
         });
