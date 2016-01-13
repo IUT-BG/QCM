@@ -125,6 +125,7 @@ public class PanelEtudiant extends JPanel {
 
         liste_qcm.add(jsp, c2);
         liste_qcm.setBorder(bord);
+        
 
         //Placement du panel avec Qcm actuel
         c.gridy = 1;
@@ -151,14 +152,25 @@ public class PanelEtudiant extends JPanel {
         c.gridheight = 0;
         
         JButton bt_Effectuer = new JButton("Effectuer");
+        bt_Effectuer.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EffectuerQcm x = new EffectuerQcm(liste_qcm_etu.get);
+            }
+            
+        });
         this.add(bt_Effectuer,c);
+      
 
     }
 
     public void ajoutListe() {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
-        /*for (Qcm qc : etu.getClasse().getListe_qcm()){
+        /*Fonction utile aprés quand on aura d'autre QCM a ajouter dans la liste
+        
+        for (Qcm qc : etu.getClasse().getListe_qcm()){
          ((DefaultListModel)liste_qcm_etu.getModel()).addElement(qc.getTitre());
         
             
