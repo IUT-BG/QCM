@@ -158,6 +158,10 @@ public class PanelEtudiant extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 EffectuerQcm x = new EffectuerQcm((Qcm)liste_qcm_etu.getSelectedValue(), etu);
+                if(etu.getQcm() == (Qcm)liste_qcm_etu.getSelectedValue())
+                    affQcm();
+                else
+                    JOptionPane.showMessageDialog(parentFrame, "Lol. Fini ton qcm coquin.");
             }
             
         });
