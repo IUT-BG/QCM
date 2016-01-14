@@ -12,7 +12,7 @@ package Model;
 public class Note {
     
     int id_etu;
-    int note;
+    float note;
 
     public Note() {
     }
@@ -22,12 +22,11 @@ public class Note {
         this.note = note;
     }
     
-
     public int getId_etu() {
         return id_etu;
     }
 
-    public int getNote() {
+    public float getNote() {
         return note;
     }
 
