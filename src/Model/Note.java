@@ -17,6 +17,12 @@ public class Note {
     public Note() {
     }
 
+    public Note(int id_etu, int note) {
+        this.id_etu = id_etu;
+        this.note = note;
+    }
+    
+
     public int getId_etu() {
         return id_etu;
     }
