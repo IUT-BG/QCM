@@ -423,13 +423,14 @@ public class PanelEtudiant extends JPanel {
                 VerifReponse v = new VerifReponse(liste_question, liste_radio, etu.getQcm());
                 float final_note = v.note();
                 System.out.println(final_note);
-                Note n = new Note(etu.getId(), final_note);
-                etu.getQcm().ajouterNote(n);
+                
                 if(v.getNonValide()){
                     JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
                     return;
                 }
                 JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
+                Note n = new Note(etu.getId(), final_note);
+                etu.getQcm().ajouterNote(n);
                 etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
                 rafraichissement();
             }
