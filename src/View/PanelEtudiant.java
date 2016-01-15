@@ -119,6 +119,7 @@ public class PanelEtudiant extends JPanel {
                     while ( resultSet_reponse.next() ){
                         liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
                         System.out.println("ajout rep : "+ resultSet_reponse.getString("intitule"));
+                        System.out.println(" valide ? : "+resultSet_reponse.getBoolean("valide"));
                         //remplir a liste de rep
                     }
                     liste_quest.add(new Question(resultSet_question.getString("intitule"),liste_rep));
@@ -145,16 +146,7 @@ public class PanelEtudiant extends JPanel {
         if (parentWindow instanceof Frame) {
             parentFrame = (Frame) parentWindow;
         }
-
-        /* ATTENTION
-         APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
-         */
-        /*test = new TestQcm();
-         Classe t_classe = new Classe();
-         t_classe.setNum("2nd2");
-
-         etu = new Etudiant(t_classe, "Magand", "Louis", 1);
-         etu.setQcm(test.getQcm());*/
+        
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
         liste_radio = new ArrayList();
@@ -253,14 +245,9 @@ public class PanelEtudiant extends JPanel {
     public void ajoutListe() {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
-        /*Fonction utile aprés quand on aura d'autre QCM a ajouter dans la liste*/
-        etu.getClasse().getListe_qcm().add(etu.getQcm());
         for (Qcm qc : etu.getClasse().getListe_qcm()) {
             ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
-
         }
-        ((DefaultListModel) liste_qcm_etu.getModel()).addElement("caca");
-        ((DefaultListModel) liste_qcm_etu.getModel()).addElement(etu.getQcm().getTitre());
     }
 
     public void affQcm() {

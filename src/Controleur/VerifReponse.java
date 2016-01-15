@@ -42,8 +42,11 @@ public class VerifReponse {
         for (Question q : liste_question) {
             for (Reponse r : liste_question.get(question).getReponse()) {
                 if (r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    System.out.println("reponse valide : "+r.getIntitule());
                     note++;
                 } else if (!r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    System.out.println("reponse fausse : "+r.getIntitule());
+                    System.out.println(r.isValide());
                     note--;
                 }
                 else if(!liste_radio.get(reponse).isSelected()){
