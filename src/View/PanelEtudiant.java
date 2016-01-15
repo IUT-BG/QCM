@@ -71,6 +71,7 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void initialisation_bd() {
+        //peut etre mettre dans etudiant et mettre load classe dans classe
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
         //faire l'identification etu
@@ -90,25 +91,29 @@ public class PanelEtudiant extends JPanel {
                 + " FROM Classe "
                 + "INNER JOIN Personne "
                 + "WHERE Personne.id = " + etu.getId()
-                + "AND Classe.intitule = Personne.classe");
+                + " AND Classe.intitule = Personne.classe");
         try {
             Classe classe = new Classe(resultSet.getString("intitule"));
-            resultSet = connexion.query("SELECT Qcm.titre, Qcm.id_prof "
-                    + "FROM Qcm INNER JOIN Classe "
-                    + "WHERE Classe.intitule = '" + classe.getNom()
+            ResultSet resultSet_qcm = connexion.query("SELECT Qcm.titre, Qcm.id_prof, Qcm.id"
+                    + " FROM Qcm INNER JOIN Classe"
+                    + " WHERE Classe.intitule = '" + classe.getNom()
                     + "' AND Classe.intitule = Qcm.access");
             ArrayList<Qcm> liste_q = new ArrayList();
-            while (resultSet.next()) {
-                ResultSet resultSet_question = connexion.query("");
+            ArrayList<Question> liste_quest = new ArrayList();
+            ArrayList<Reponse> liste_rep = new ArrayList();
+            while (resultSet_qcm.next()) {
+                ResultSet resultSet_question = connexion.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm = "+resultSet.getString("id"));
                 while (resultSet_question.next()) {
-                    ResultSet resultSet_reponse = connexion.query("");
+                    ResultSet resultSet_reponse = connexion.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question = "+resultSet_question.getString("id"));
                     while ( resultSet_reponse.next() ){
-                        //remplir a lsite de rep
+                        liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
+                        //remplir a liste de rep
                     }
+                    liste_quest.add(new Question(resultSet_question.getString("intitule"),liste_rep));
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
-                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getString("id_prof")));
+                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest));
             }
             etu.setClasse(classe);
         } catch (SQLException ex) {
