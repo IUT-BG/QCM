@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package View;
+import Model.Professeur;
 import Model.Qcm;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
@@ -21,12 +22,12 @@ import javax.swing.event.ListSelectionEvent;
  */
 public class PanelProfesseur extends JPanel{
     
-    private JButton note;
-    private JButton creer;
-    private JButton modifier;
-    private JButton supprimer;
+    private ArrayList<JButton> note;
+    private ArrayList<JButton> creer;
+    private ArrayList<JButton> modifier;
+    private ArrayList<JButton> supprimer;
     
-    private JTextField infos;
+    private ArrayList<JLabel> titre;
     
     
     public PanelProfesseur(){
@@ -34,6 +35,40 @@ public class PanelProfesseur extends JPanel{
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
+        
+        note = new ArrayList<JButton>();
+        creer = new ArrayList<JButton>();
+        modifier = new ArrayList<JButton>();
+        supprimer = new ArrayList<JButton>();
+        titre = new ArrayList<JLabel>();
+        
+        Professeur p =new Professeur();
+        
+        ArrayList<String> liste = p.voirQcm();
+        
+        for(int i=0;i<liste.size(); i++){
+            titre.add(new JLabel(liste.get(i)));
+            note.add(new JButton("Notes"));
+            creer.add(new JButton("Creer"));
+            modifier.add(new JButton("Modifier"));
+            supprimer.add(new JButton("Supprimer"));
+            
+            global.gridy = i;
+            global.gridx = 0;
+            this.add(titre.get(i), global);
+            
+            global.gridx++;
+            this.add(note.get(i), global);
+            
+            global.gridx++;
+            this.add(creer.get(i), global);
+            
+            global.gridx++;
+            this.add(modifier.get(i), global);
+            
+            global.gridx++;
+            this.add(supprimer.get(i), global);
+        }
         
         
     }

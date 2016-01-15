@@ -19,6 +19,7 @@ public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
 
     public Professeur() {
+        id = 0;
     }
     
     public ArrayList<Note> voirResultats(Qcm qcm){
@@ -27,12 +28,12 @@ public class Professeur extends Personne{
     
     public ArrayList<String> voirQcm(){
         
-            Connexion connexion = new Connexion("Z:\\Documents\\NetBeansProjects\\QCM\\QCM.sqlite");
+            Connexion connexion = new Connexion("Z:\\Documents\\NetBeansProjects\\QCM(bon)\\QCM.sqlite");
             connexion.connect();
             
             ArrayList<String> liste = new ArrayList<String>();
             
-            ResultSet resultSet = connexion.query("SELECT titre FROM Qcm WHERE "+Integer.toString(id)+"=id_prof;");
+            ResultSet resultSet = connexion.query("SELECT titre FROM Qcm WHERE id_prof="+Integer.toString(id)+";");
         try {
             while (resultSet.next()) {
                 liste.add(resultSet.getString("titre"));

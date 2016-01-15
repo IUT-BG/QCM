@@ -10,5 +10,15 @@ package Model;
  * @author toshiba
  */
 public class Note {
-     
+    int id_etudiant;
+    int id_qcm;
+    int note;
+
+    public Note(int id_etudiant, int id_qcm, int note) {
+        this.id_etudiant = id_etudiant;
+        this.id_qcm = id_qcm;
+        this.note = note;
+    }
+    
+    
 }
