@@ -74,6 +74,12 @@ public class PanelEtudiant extends JPanel {
         //peut etre mettre dans etudiant et mettre load classe dans classe
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
+        
+        Connexion connexion_quest = new Connexion("QCM.sqlite");
+        connexion_quest.connect();
+        
+        Connexion connexion_rep = new Connexion("QCM.sqlite");
+        connexion_rep.connect();
         //faire l'identification etu
         /* etu, etu.setQcm,
          test = qcm actuel
@@ -98,24 +104,33 @@ public class PanelEtudiant extends JPanel {
                     + " FROM Qcm INNER JOIN Classe"
                     + " WHERE Classe.intitule = '" + classe.getNom()
                     + "' AND Classe.intitule = Qcm.access");
+            System.out.println(resultSet_qcm);
+            
             ArrayList<Qcm> liste_q = new ArrayList();
             ArrayList<Question> liste_quest = new ArrayList();
             ArrayList<Reponse> liste_rep = new ArrayList();
             while (resultSet_qcm.next()) {
-                ResultSet resultSet_question = connexion.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm = "+resultSet.getString("id"));
+                System.out.println("caca");
+                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm = "+resultSet.getString("id"));
                 while (resultSet_question.next()) {
-                    ResultSet resultSet_reponse = connexion.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question = "+resultSet_question.getString("id"));
+                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question = "+resultSet_question.getString("id"));
                     while ( resultSet_reponse.next() ){
                         liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
+                        System.out.println("ajout rep : "+ resultSet_reponse.getString("intitule"));
                         //remplir a liste de rep
                     }
                     liste_quest.add(new Question(resultSet_question.getString("intitule"),liste_rep));
+                    System.out.println("ajout question : "+ resultSet_question.getString("intitule"));
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
                 liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest));
             }
+            classe.setListe_qcm(liste_q);
             etu.setClasse(classe);
+            etu.setQcm(liste_q.get(0));
+            
+            //etu.setQcm(liste_q.get(0));
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -471,7 +486,7 @@ public class PanelEtudiant extends JPanel {
          i++;
          }*/
         System.out.println(i + " et " + re);
-        c.gridy = (i + re) * 2;
+        c.gridy ++;
         c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
