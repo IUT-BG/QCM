@@ -5,6 +5,7 @@
  */
 package Controleur;
 
+import Model.Connexion;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
@@ -25,6 +26,7 @@ public class VerifReponse {
 
     public VerifReponse(ArrayList<Question> liste_question,
             ArrayList<JRadioButton> liste_radio, Qcm qcm) {
+        
         this.liste_question = liste_question;
         this.liste_radio = liste_radio;
         this.qcm = qcm;

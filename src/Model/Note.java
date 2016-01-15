@@ -10,5 +10,34 @@ package Model;
  * @author toshiba
  */
 public class Note {
+    
+    int id_etu;
+    float note;
+
+    public Note() {
+    }
+
+    public Note(int id_etu, float note) {
+        this.id_etu = id_etu;
+        this.note = note;
+    }
+    
+    public int getId_etu() {
+        return id_etu;
+    }
+
+    public float getNote() {
+        return note;
+    }
+
+    public void setId_etu(int id_etu) {
+        this.id_etu = id_etu;
+    }
+
+    public void setNote(int note) {
+        this.note = note;
+    }
+    
+    
      
 }

@@ -5,9 +5,12 @@
  */
 package View;
 
+import Controleur.EffectuerQcm;
 import Controleur.VerifReponse;
 import Model.Classe;
+import Model.Connexion;
 import Model.Etudiant;
+import Model.Note;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
@@ -21,7 +24,11 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -62,13 +69,13 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void initialisation() {
-        
+
         Window parentWindow = SwingUtilities.windowForComponent(this);
         parentFrame = null;
         if (parentWindow instanceof Frame) {
             parentFrame = (Frame) parentWindow;
         }
-        
+
         /* ATTENTION
          APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
          */
@@ -143,22 +150,37 @@ public class PanelEtudiant extends JPanel {
         jsp.setViewportView(affiche_qcm);
         jsp.setColumnHeader(null);
         this.add(jsp, c);
-        
+
         c.gridy = 2;
         c.gridx = 0;
-        c.weightx = 0 ;
-        c.weighty = 0 ;
+        c.weightx = 0;
+        c.weighty = 0;
         c.gridheight = 0;
-        
+
         JButton bt_Effectuer = new JButton("Effectuer");
-        this.add(bt_Effectuer,c);
+        bt_Effectuer.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EffectuerQcm x = new EffectuerQcm((Qcm) liste_qcm_etu.getSelectedValue(), etu);
+                if (etu.getQcm() == (Qcm) liste_qcm_etu.getSelectedValue()) {
+                    affQcm();
+                } else {
+                    JOptionPane.showMessageDialog(parentFrame, "Lol. Fini ton qcm coquin.");
+                }
+            }
+
+        });
+        this.add(bt_Effectuer, c);
 
     }
 
     public void ajoutListe() {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
-        /*for (Qcm qc : etu.getClasse().getListe_qcm()){
+        /*Fonction utile aprés quand on aura d'autre QCM a ajouter dans la liste
+        
+         for (Qcm qc : etu.getClasse().getListe_qcm()){
          ((DefaultListModel)liste_qcm_etu.getModel()).addElement(qc.getTitre());
         
             
@@ -182,7 +204,7 @@ public class PanelEtudiant extends JPanel {
 
             JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
             affiche_qcm.add(label_q, c);
-            
+
             liste_question.add(q);
 
             c.gridy++;
@@ -405,13 +427,19 @@ public class PanelEtudiant extends JPanel {
                 VerifReponse v = new VerifReponse(liste_question, liste_radio, etu.getQcm());
                 float final_note = v.note();
                 System.out.println(final_note);
-                if(v.getNonValide()){
+
+                if (v.getNonValide()) {
                     JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
                     return;
+                } else {
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
+                    Note n = new Note(etu.getId(), final_note);
+                    etu.getQcm().ajouterNote(n);
+                    addNote(n);
+                    etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
+
+                    rafraichissement();
                 }
-                JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
-                etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
-                rafraichissement();
             }
 
         });
@@ -426,8 +454,19 @@ public class PanelEtudiant extends JPanel {
         }
         affQcm();
     }
-    
-    public void selectQcm(){
-        
+
+    public void selectQcm() {
+
+    }
+
+    public void addNote(Note n) {
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect();
+
+        ArrayList<String> liste = new ArrayList<String>();
+
+        int resultSet = connexion.insert("INSERT INTO note (note, id_etu, id_qcm) VALUES "
+                + "(" + n.getNote() + "," + etu.getId() + "," + etu.getQcm().getId() + ");");
+        System.out.println("Nb de ligne affecté : "+resultSet);
     }
 }
