@@ -16,14 +16,15 @@ import java.sql.Statement;
  * @author p1306726
  */
 public class Connexion {
+
     public String DBPath = "";
     private Connection connection = null;
     private Statement statement = null;
-    
+
     public Connexion(String dBPath) {
         DBPath = dBPath;
     }
- 
+
     public void connect() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -38,7 +39,7 @@ public class Connexion {
             System.out.println("Erreur de connecxion");
         }
     }
- 
+
     public void close() {
         try {
             statement.close();
@@ -47,16 +48,28 @@ public class Connexion {
             e.printStackTrace();
         }
     }
-    
+
     public ResultSet query(String requet) {
-       ResultSet resultat = null;
-       try {
-           resultat = statement.executeQuery(requet);
-       } catch (SQLException e) {
-           e.printStackTrace();
-           System.out.println("Erreur dans la requete : " + requet);
-       }
-       return resultat;
- 
-   }
+        ResultSet resultat = null;
+        try {
+            resultat = statement.executeQuery(requet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur dans la requete : " + requet);
+        }
+        return resultat;
+
+    }
+
+    public int insert(String requet) {
+        int resultat = -1;
+
+        try {
+            resultat = statement.executeUpdate(requet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur dans la requete (insert) : " + requet);
+        }
+        return resultat;
+    }
 }
