@@ -16,14 +16,15 @@ import javax.swing.JPanel;
 public class FenetrePrincipal extends JFrame{
     
     public FenetrePrincipal(){
-        JPanel panel_etu = new PanelEtudiant();
+        JPanel panel_etu = new PanelEtudiant(),
+                panel_co = new PanelConnexion();
         this.setTitle("Qcm");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
         
         PanelCreationQcm pan = new PanelCreationQcm();
         this.add(pan);
-        this.add(panel_etu);
+        this.add(panel_co);
         
         initialisation();
         rafraichir();

@@ -5,11 +5,15 @@
  */
 package View;
 
+import Model.Connexion;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,7 +38,18 @@ public class PanelConnexion extends JPanel{
         t_password = new JTextField(8);
         b_login = new JButton("Valider");
         b_login.addActionListener((ActionEvent e) -> {
-            System.out.println(verifChamp());
+            if(verifChamp())
+            {
+                try {
+                    System.out.println(verifConnexion(Integer.parseInt(t_user.getText()),t_password.getText()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelConnexion.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else
+            {
+                
+            }
         });
         
         init();
@@ -61,8 +76,32 @@ public class PanelConnexion extends JPanel{
         this.add(b_login,c);
         this.setVisible(true);
     }
-    public boolean verifChamp()
+    public boolean verifChamp() // verifie que tous les champs sont remplis
     {
-        return(!(t_user.getText().equals("")||t_password.getText().equals("")));
+        if((t_user.getText().equals(""))||(t_password.getText().equals("")))
+        {
+            l_warning.setText("Veuillez renseigner tous les champs");
+            return false;
+        }   
+        if(false) // utiliser les expressions regulieres pour verifier que se sont biens que des chiffres
+        {
+            l_warning.setText("Identifiant incorrect");
+            return false;
+        }
+        return true;
+    }
+    public boolean verifConnexion(int id, String pswd) throws SQLException
+    {
+        Connexion co = new Connexion("QCM.sqlite");
+        co.connect();
+        ResultSet res = co.query("select count(id) from Personne where id="+id+" and mdp='"+pswd+"';");
+        res.next();
+        if(res.getInt(1)==0)
+        {
+            l_warning.setText("Identifiant ou mot de passe incorrect");
+            return false;
+        }
+        System.out.println("cool");
+        return true;
     }
 }
