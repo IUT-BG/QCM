@@ -77,6 +77,7 @@ public class PanelEtudiant extends JPanel {
         test = qcm actuel
         classe
         */
+        ResultSet resultSet = connexion.query("SELECT");
     }
     
     public void initialisation() {
@@ -90,12 +91,12 @@ public class PanelEtudiant extends JPanel {
         /* ATTENTION
          APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
          */
-        test = new TestQcm();
+        /*test = new TestQcm();
         Classe t_classe = new Classe();
         t_classe.setNum("2nd2");
 
         etu = new Etudiant(t_classe, "Magand", "Louis", 1);
-        etu.setQcm(test.getQcm());
+        etu.setQcm(test.getQcm());*/
 
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
