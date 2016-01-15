@@ -10,7 +10,6 @@ package Model;
  * @author toshiba
  */
 public class Note {
-    
     int id_etudiant;
     int id_qcm;
     int note;
