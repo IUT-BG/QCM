@@ -103,7 +103,7 @@ public class PanelEtudiant extends JPanel {
             ResultSet resultSet_qcm = connexion.query("SELECT Qcm.titre, Qcm.id_prof, Qcm.id"
                     + " FROM Qcm INNER JOIN Classe"
                     + " WHERE Classe.intitule = '" + classe.getNom()
-                    + "' AND Classe.intitule = Qcm.access");
+                    + "' AND Classe.intitule = Qcm.access ORDER BY Qcm.id ASC ");
             System.out.println(resultSet_qcm);
             
             ArrayList<Reponse> liste_rep = new ArrayList();
@@ -111,10 +111,11 @@ public class PanelEtudiant extends JPanel {
             ArrayList<Question> liste_quest = new ArrayList();
             
             while (resultSet_qcm.next()) {
-                System.out.println("caca");
-                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm = "+resultSet.getString("id"));
+                System.out.println("On fait le QCM avec un id : "+resultSet.getString("id"));
+                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm ="+resultSet.getString("id")+" ORDER BY q.id ASC");
+                liste_quest = new ArrayList();
                 while (resultSet_question.next()) {
-                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question = "+resultSet_question.getString("id"));
+                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question ="+resultSet_question.getString("id")+" ORDER BY r.id ASC");
                     liste_rep = new ArrayList();
                     while ( resultSet_reponse.next() ){
                         liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
@@ -131,7 +132,6 @@ public class PanelEtudiant extends JPanel {
             }
             classe.setListe_qcm(liste_q);
             etu.setClasse(classe);
-            etu.setQcm(liste_q.get(0));
             
             //etu.setQcm(liste_q.get(0));
         } catch (SQLException ex) {
@@ -147,6 +147,7 @@ public class PanelEtudiant extends JPanel {
             parentFrame = (Frame) parentWindow;
         }
         
+        etu.setQcm(null);
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
         liste_radio = new ArrayList();
@@ -223,15 +224,20 @@ public class PanelEtudiant extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Qcm qcm_test = null;
+                int i = 0;
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
+                    System.out.println("SI : "+q.getTitre()+" est egale avec : "+etu.getClasse().getListe_qcm().get(i).getTitre());
+                    i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
+                        System.out.println("OUI");
                     }
+                   
                 }
                 EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
                 //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
                 if (etu.getQcm() == qcm_test) {
-                    affQcm();
+                    rafraichissement();
                 } else {
                     JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté");
                 }
@@ -251,12 +257,15 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void affQcm() {
+        if(etu.getQcm() == null)
+            return;
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
 
         for (Question q : etu.getQcm().getQ()) {
+            System.out.println(q.getIntitule());
             c.anchor = GridBagConstraints.WEST;
             c.gridwidth = 10;
 

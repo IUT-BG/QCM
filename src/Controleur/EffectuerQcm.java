@@ -19,8 +19,9 @@ public class EffectuerQcm {
     Etudiant etu;
 
     public EffectuerQcm(Qcm qcm, Etudiant etu) {
-        if(qcm == null)
+        if (qcm == null) {
             return;
+        }
         this.qcm = qcm;
         this.etu = etu;
         test();
@@ -40,13 +41,17 @@ public class EffectuerQcm {
                                     //qcm deja effectué
                                     System.out.println("Qcm deja effectué");
                                     return;
-                                }
-                                else{
+                                } else {
                                     System.out.println("etu.setQcm(qcm) normalement viser par l'utilisateur");
                                     etu.setQcm(qcm);
                                     return;
                                 }
                             }
+                        }
+                        if (qcm.getNote().isEmpty()) {
+                            System.out.println("etu.setQcm(qcm) normalement viser par l'utilisateur");
+                            etu.setQcm(qcm);
+                            return;
                         }
                     }
                 }
