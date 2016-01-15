@@ -59,15 +59,26 @@ public class PanelEtudiant extends JPanel {
     ArrayList<Question> liste_question;
     ArrayList<JRadioButton> liste_radio;
     JScrollPane jsp;
+    Connexion co;
 
     public PanelEtudiant() {
-
+        initialisation_bd();
         initialisation();
         affQcm();
         ajoutListe();
 
     }
 
+    public void initialisation_bd(){
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect(); 
+        //faire l'identification etu
+        /* etu, etu.setQcm,
+        test = qcm actuel
+        classe
+        */
+    }
+    
     public void initialisation() {
 
         Window parentWindow = SwingUtilities.windowForComponent(this);
@@ -83,11 +94,10 @@ public class PanelEtudiant extends JPanel {
         Classe t_classe = new Classe();
         t_classe.setNum("2nd2");
 
-        affiche_qcm = new JPanel();
-
         etu = new Etudiant(t_classe, "Magand", "Louis", 1);
         etu.setQcm(test.getQcm());
 
+        affiche_qcm = new JPanel();
         liste_question = new ArrayList();
         liste_radio = new ArrayList();
 
@@ -162,11 +172,18 @@ public class PanelEtudiant extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                EffectuerQcm x = new EffectuerQcm((Qcm) liste_qcm_etu.getSelectedValue(), etu);
-                if (etu.getQcm() == (Qcm) liste_qcm_etu.getSelectedValue()) {
+                Qcm qcm_test = null;
+                for (Qcm q : etu.getClasse().getListe_qcm()) {
+                    if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
+                        qcm_test = q;
+                    }
+                }
+                EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
+                //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
+                if (etu.getQcm() == qcm_test) {
                     affQcm();
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Lol. Fini ton qcm coquin.");
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté");
                 }
             }
 
@@ -178,13 +195,12 @@ public class PanelEtudiant extends JPanel {
     public void ajoutListe() {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
-        /*Fonction utile aprés quand on aura d'autre QCM a ajouter dans la liste
-        
-         for (Qcm qc : etu.getClasse().getListe_qcm()){
-         ((DefaultListModel)liste_qcm_etu.getModel()).addElement(qc.getTitre());
-        
-            
-         }*/
+        /*Fonction utile aprés quand on aura d'autre QCM a ajouter dans la liste*/
+        etu.getClasse().getListe_qcm().add(etu.getQcm());
+        for (Qcm qc : etu.getClasse().getListe_qcm()) {
+            ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+
+        }
         ((DefaultListModel) liste_qcm_etu.getModel()).addElement("caca");
         ((DefaultListModel) liste_qcm_etu.getModel()).addElement(etu.getQcm().getTitre());
     }
@@ -462,11 +478,10 @@ public class PanelEtudiant extends JPanel {
     public void addNote(Note n) {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
-
         ArrayList<String> liste = new ArrayList<String>();
 
         int resultSet = connexion.insert("INSERT INTO note (note, id_etu, id_qcm) VALUES "
                 + "(" + n.getNote() + "," + etu.getId() + "," + etu.getQcm().getId() + ");");
-        System.out.println("Nb de ligne affecté : "+resultSet);
+        System.out.println("Nb de ligne affecté : " + resultSet);
     }
 }
