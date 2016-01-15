@@ -12,21 +12,30 @@ import java.util.ArrayList;
  * @author toshiba
  */
 public class Classe {
-    
-    public String num;
+
+    public String nom;
     protected ArrayList<Integer> liste_id_etu;
     protected ArrayList<Qcm> liste_qcm;
 
     public Classe() {
         liste_id_etu = new ArrayList();
         liste_qcm = new ArrayList();
-        num="";
+        nom = "";
     }
-    
-    public Classe(ArrayList<Integer> liste_id_etu, ArrayList<Qcm> liste_qcm, String num) {
+
+    public Classe(String nom) {
+        this.nom = nom;
+    }
+
+    public Classe(ArrayList<Qcm> liste_qcm, String nom) {
+        this.liste_qcm = liste_qcm;
+        this.nom = nom;
+    }
+
+    public Classe(ArrayList<Integer> liste_id_etu, ArrayList<Qcm> liste_qcm, String nom) {
         this.liste_id_etu = liste_id_etu;
         this.liste_qcm = liste_qcm;
-        this.num = num;
+        this.nom = nom;
     }
 
     public void setListe_id_etu(ArrayList<Integer> liste_id_etu) {
@@ -36,9 +45,9 @@ public class Classe {
     public void setListe_qcm(ArrayList<Qcm> liste_qcm) {
         this.liste_qcm = liste_qcm;
     }
-    
-    public void setNum(String num){
-        this.num = num;
+
+    public void setNom(String num) {
+        this.nom = num;
     }
 
     public ArrayList<Integer> getListe_id_etu() {
@@ -48,10 +57,9 @@ public class Classe {
     public ArrayList<Qcm> getListe_qcm() {
         return liste_qcm;
     }
-    
-    public String getNum(){
-        return num;
+
+    public String getNom() {
+        return nom;
     }
-    
+
 }
- 

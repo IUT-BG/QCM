@@ -11,6 +11,7 @@ import Model.Classe;
 import Model.Connexion;
 import Model.Etudiant;
 import Model.Note;
+import Model.Professeur;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
@@ -69,17 +70,52 @@ public class PanelEtudiant extends JPanel {
 
     }
 
-    public void initialisation_bd(){
+    public void initialisation_bd() {
         Connexion connexion = new Connexion("QCM.sqlite");
-        connexion.connect(); 
+        connexion.connect();
         //faire l'identification etu
         /* etu, etu.setQcm,
-        test = qcm actuel
-        classe
-        */
-        ResultSet resultSet = connexion.query("SELECT");
+         test = qcm actuel
+         classe
+         */
+        ResultSet resultSet = connexion.query("SELECT nom, prenom, id "
+                + "FROM Personne WHERE id='1'");
+        try {
+            etu = new Etudiant(resultSet.getString("nom"),
+                    resultSet.getString("prenom"), resultSet.getInt("id"));
+        } catch (SQLException ex) {
+            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        resultSet = connexion.query("SELECT intitule"
+                + " FROM Classe "
+                + "INNER JOIN Personne "
+                + "WHERE Personne.id = " + etu.getId()
+                + "AND Classe.intitule = Personne.classe");
+        try {
+            Classe classe = new Classe(resultSet.getString("intitule"));
+            resultSet = connexion.query("SELECT Qcm.titre, Qcm.id_prof "
+                    + "FROM Qcm INNER JOIN Classe "
+                    + "WHERE Classe.intitule = '" + classe.getNom()
+                    + "' AND Classe.intitule = Qcm.access");
+            ArrayList<Qcm> liste_q = new ArrayList();
+            while (resultSet.next()) {
+                ResultSet resultSet_question = connexion.query("");
+                while (resultSet_question.next()) {
+                    ResultSet resultSet_reponse = connexion.query("");
+                    while ( resultSet_reponse.next() ){
+                        //remplir a lsite de rep
+                    }
+                    //remplir la liste de questions
+                }
+                //remplir la liste de qcm
+                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getString("id_prof")));
+            }
+            etu.setClasse(classe);
+        } catch (SQLException ex) {
+            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     public void initialisation() {
 
         Window parentWindow = SwingUtilities.windowForComponent(this);
@@ -92,12 +128,11 @@ public class PanelEtudiant extends JPanel {
          APRES LES TEST : ne pas oublier de changer cette ligne et celle de setQcm test qcm
          */
         /*test = new TestQcm();
-        Classe t_classe = new Classe();
-        t_classe.setNum("2nd2");
+         Classe t_classe = new Classe();
+         t_classe.setNum("2nd2");
 
-        etu = new Etudiant(t_classe, "Magand", "Louis", 1);
-        etu.setQcm(test.getQcm());*/
-
+         etu = new Etudiant(t_classe, "Magand", "Louis", 1);
+         etu.setQcm(test.getQcm());*/
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
         liste_radio = new ArrayList();
@@ -112,7 +147,7 @@ public class PanelEtudiant extends JPanel {
         this.add(bt, c);
 
         JTextArea txt = new JTextArea(etu.getNom() + " " + etu.getPrenom() + " "
-                + etu.getClasse().getNum());
+                + etu.getClasse().getNom());
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.EAST;
@@ -452,7 +487,7 @@ public class PanelEtudiant extends JPanel {
                     JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
                     Note n = new Note(etu.getId(), final_note);
                     etu.getQcm().ajouterNote(n);
-                    addNote(n);
+                    n.addNote(etu);
                     etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
 
                     rafraichissement();
@@ -476,13 +511,4 @@ public class PanelEtudiant extends JPanel {
 
     }
 
-    public void addNote(Note n) {
-        Connexion connexion = new Connexion("QCM.sqlite");
-        connexion.connect();
-        ArrayList<String> liste = new ArrayList<String>();
-
-        int resultSet = connexion.insert("INSERT INTO note (note, id_etu, id_qcm) VALUES "
-                + "(" + n.getNote() + "," + etu.getId() + "," + etu.getQcm().getId() + ");");
-        System.out.println("Nb de ligne affecté : " + resultSet);
-    }
 }

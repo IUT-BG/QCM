@@ -24,6 +24,10 @@ public class Etudiant extends Personne{
         classe = new Classe();
     }
     
+    public Etudiant(String nom, String prenom, int id){
+        super(nom, prenom, id);
+    }
+    
     public Etudiant(Classe classe, String nom, String prenom, int id){
         super(nom, prenom, id);
         this.classe = classe;
