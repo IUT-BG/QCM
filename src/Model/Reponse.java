@@ -12,6 +12,10 @@ package Model;
 public class Reponse {
     private String intitule;
     private boolean valide;
+    
+    public Reponse(){
+        
+    }
 
     public Reponse(String intitule, boolean valide) {
         this.intitule = intitule;

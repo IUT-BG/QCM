@@ -22,7 +22,7 @@ public class Qcm {
         this.titre = titre;
         this.id_prof = id_prof;
         this.q = q;
-        this.note = null; 
+        this.note = new ArrayList(); 
     }
     
     public void modifierQcm(ArrayList<Question> nouvelle){
@@ -57,8 +57,6 @@ public class Qcm {
     }
 
     public void ajouterNote(Note note) {
-        if(note == null)
-            this.note = new ArrayList();
         this.note.add(note);
     }
 

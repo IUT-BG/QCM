@@ -16,6 +16,12 @@ public class Question {
     private String intitule;
     private ArrayList<Reponse> reponse;
 
+    public Question() {
+        this.intitule = null;
+        this.reponse = new ArrayList();
+    }
+    
+    
     public Question(String intitule, ArrayList<Reponse> reponse) {
         this.intitule = intitule;
         this.reponse = reponse;
@@ -41,8 +47,8 @@ public class Question {
         this.intitule = intitule;
     }
 
-    public void setReponse(ArrayList<Reponse> reponse) {
-        this.reponse = reponse;
+    public void setReponse(Reponse reponse) {
+        this.reponse.add(reponse);
     }
     
 } 

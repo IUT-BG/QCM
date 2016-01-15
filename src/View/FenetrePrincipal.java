@@ -22,22 +22,22 @@ public class FenetrePrincipal extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
         
-        //this.add(panel_etu);
-        this.add(panel_prof);
+        PanelCreationQcm pan = new PanelCreationQcm();
+        this.add(pan);
+        this.add(panel_etu);
         
         initialisation();
         rafraichir();
     }
     
     public void initialisation(){
-        int sizeX=450;
-        int sizeY=600;
+        int sizeX=650;
+        int sizeY=800;
         System.out.println();
         this.setPreferredSize(new Dimension(sizeX, sizeY));    
     }
     
     public void rafraichir(){
-        
         this.pack();
         this.setVisible(true);
     }
