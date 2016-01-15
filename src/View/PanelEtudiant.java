@@ -106,14 +106,16 @@ public class PanelEtudiant extends JPanel {
                     + "' AND Classe.intitule = Qcm.access");
             System.out.println(resultSet_qcm);
             
+            ArrayList<Reponse> liste_rep = new ArrayList();
             ArrayList<Qcm> liste_q = new ArrayList();
             ArrayList<Question> liste_quest = new ArrayList();
-            ArrayList<Reponse> liste_rep = new ArrayList();
+            
             while (resultSet_qcm.next()) {
                 System.out.println("caca");
                 ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm = "+resultSet.getString("id"));
                 while (resultSet_question.next()) {
                     ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question = "+resultSet_question.getString("id"));
+                    liste_rep = new ArrayList();
                     while ( resultSet_reponse.next() ){
                         liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
                         System.out.println("ajout rep : "+ resultSet_reponse.getString("intitule"));
@@ -262,9 +264,6 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void affQcm() {
-        int i = 0;
-        int re = 0;
-
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -308,184 +307,7 @@ public class PanelEtudiant extends JPanel {
             }
             c.gridy = c.gridy + 1;
             c.gridx = 0;
-            i++;
-            re++;
         }
-
-        /* for (Question q : etu.getQcm().getQ()) {
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 10;
-
-         JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
-         affiche_qcm.add(label_q, c);
-
-         c.gridy++;
-
-         for (Reponse r : q.getReponse()) {
-
-         c.ipady= 20;
-         c.ipadx = 20;
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 1;
-
-         JLabel label_r = new JLabel(r.getIntitule());
-         affiche_qcm.add(label_r, c);
-
-         c.anchor = GridBagConstraints.WEST;
-         c.gridx++;
-
-         JRadioButton bt_r = new JRadioButton();
-         affiche_qcm.add(bt_r, c);
-
-         c.gridx++;
-         c.ipadx = 0;
-         }
-         liste_question.add(q);
-         c.gridy = c.gridy + 1;
-         c.gridx = 0;
-         i++;
-         }
-        
-         /*for (Question q : etu.getQcm().getQ()) {
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 10;
-
-         JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
-         affiche_qcm.add(label_q, c);
-
-         c.gridy++;
-
-         for (Reponse r : q.getReponse()) {
-
-         c.ipady= 20;
-         c.ipadx = 20;
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 1;
-
-         JLabel label_r = new JLabel(r.getIntitule());
-         affiche_qcm.add(label_r, c);
-
-         c.anchor = GridBagConstraints.WEST;
-         c.gridx++;
-
-         JRadioButton bt_r = new JRadioButton();
-         liste_radio.add(bt_r);
-         affiche_qcm.add(bt_r, c);
-
-         c.gridx++;
-         c.ipadx = 0;
-         }
-            
-         c.gridy = c.gridy + 1;
-         c.gridx = 0;
-         i++;
-         }
-        
-         for (Question q : etu.getQcm().getQ()) {
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 10;
-
-         JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
-         affiche_qcm.add(label_q, c);
-
-         c.gridy++;
-
-         for (Reponse r : q.getReponse()) {
-
-         c.ipady= 20;
-         c.ipadx = 20;
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 1;
-
-         JLabel label_r = new JLabel(r.getIntitule());
-         affiche_qcm.add(label_r, c);
-
-         c.anchor = GridBagConstraints.WEST;
-         c.gridx++;
-
-         JRadioButton bt_r = new JRadioButton();
-         liste_radio.add(bt_r);
-         affiche_qcm.add(bt_r, c);
-
-         c.gridx++;
-         c.ipadx = 0;
-         }
-            
-         c.gridy = c.gridy + 1;
-         c.gridx = 0;
-         i++;
-         }
-        
-         for (Question q : etu.getQcm().getQ()) {
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 10;
-
-         JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
-         affiche_qcm.add(label_q, c);
-
-         c.gridy++;
-
-         for (Reponse r : q.getReponse()) {
-
-         c.ipady= 20;
-         c.ipadx = 20;
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 1;
-
-         JLabel label_r = new JLabel(r.getIntitule());
-         affiche_qcm.add(label_r, c);
-
-         c.anchor = GridBagConstraints.WEST;
-         c.gridx++;
-
-         JRadioButton bt_r = new JRadioButton();
-         liste_radio.add(bt_r);
-         affiche_qcm.add(bt_r, c);
-
-         c.gridx++;
-         c.ipadx = 0;
-         }
-            
-         c.gridy = c.gridy + 1;
-         c.gridx = 0;
-         i++;
-         }
-        
-         for (Question q : etu.getQcm().getQ()) {
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 10;
-
-         JLabel label_q = new JLabel("<HTML><u>" + q.getIntitule() + "</u></HTML>");
-         affiche_qcm.add(label_q, c);
-
-         c.gridy++;
-
-         for (Reponse r : q.getReponse()) {
-
-         c.ipady= 20;
-         c.ipadx = 20;
-         c.anchor = GridBagConstraints.WEST;
-         c.gridwidth = 1;
-
-         JLabel label_r = new JLabel(r.getIntitule());
-         affiche_qcm.add(label_r, c);
-
-         c.anchor = GridBagConstraints.WEST;
-         c.gridx++;
-
-         JRadioButton bt_r = new JRadioButton();
-         liste_radio.add(bt_r);
-         affiche_qcm.add(bt_r, c);
-
-         c.gridx++;
-         c.ipadx = 0;
-         }
-            
-         c.gridy = c.gridy + 1;
-         c.gridx = 0;
-         i++;
-         }*/
-        System.out.println(i + " et " + re);
         c.gridy ++;
         c.gridx = 0;
 
