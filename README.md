@@ -1,2 +1,2 @@
 # QCM
-/!\ Pour faire des tests, utilisé la classe QCM test
+Merci de supprimer les branch useless
