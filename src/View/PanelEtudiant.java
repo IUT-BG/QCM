@@ -157,9 +157,9 @@ public class PanelEtudiant extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
 
         //intialisation boutton
-        JButton bt = new JButton("Notes");
+        JButton bt_note = new JButton("Notes");
         c.anchor = GridBagConstraints.WEST;
-        this.add(bt, c);
+        this.add(bt_note, c);
 
         JTextArea txt = new JTextArea(etu.getNom() + " " + etu.getPrenom() + " "
                 + etu.getClasse().getNom());
@@ -245,6 +245,17 @@ public class PanelEtudiant extends JPanel {
 
         });
         this.add(bt_Effectuer, c);
+        
+        bt_note.addActionListener(new ActionListener() {
+
+           @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource()== bt_note){
+                    VisuNotes notes = new VisuNotes();
+                    
+                }
+            }
+        });
 
     }
 
@@ -348,5 +359,53 @@ public class PanelEtudiant extends JPanel {
     public void selectQcm() {
 
     }
+    
+    public class VisuNotes extends JDialog{
+                private ArrayList<JLabel> liste;
+                
+                public VisuNotes(){
+                    super(parentFrame,"notes de l'étudiant n°"+etu.getId(),true);
+                    liste=new ArrayList<>();
+                   
+                    init();
+                    this.pack();
+                    this.setVisible(true);
+                    
+                  
+                    
+                }
+                public void init(){
+                    this.setLayout(new GridBagLayout());
+                    this.setLocationRelativeTo(parentFrame);
+                    
+                   
+                    
+                    for(int i = 0; i< etu.voirNotes().size(); i++){
+                        liste.add(new JLabel());
+                        liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(etu.voirNotes().get(i)));
+
+                }
+                    placement_notes();
+                }
+                
+                /*public void remplir_liste( ArrayList<Float> lNotes){
+                   JLabel lab =new JLabel();
+                    for(int i = 0; i<lNotes.size(); i++){
+                        liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(lNotes.get(i)));
+                    }
+                    
+                    
+                }*/
+                
+                public void placement_notes(){
+                    GridBagConstraints cont = new GridBagConstraints();
+                    for(int i=0; i<liste.size();i++){
+                          cont.gridx=0;
+                          cont.gridy = 1+i;
+                          this.add(liste.get(i),cont);
+                    }
+                }
+               
+            }
 
 }
