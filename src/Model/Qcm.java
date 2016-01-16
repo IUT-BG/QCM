@@ -64,5 +64,19 @@ public class Qcm {
         this.q = q;
     }
     
+    public void publish(){
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect();
+        
+        connexion.insert("INSERT INTO Qcm (titre, id_prof) VALUES("+ this.titre +", "+ this.id_prof +" )");
+        
+        for(int i = 0; i<this.q.size(); i++){
+            connexion.insert("INSERT INTO Question (intitule, id_qcm) VALUES("+ this.q.get(i).getIntitule() +", "+ this.id +" )");
+            
+            for(int j = 0; j<this.q.get(i).getReponse().size(); j++){
+                connexion.insert("INSERT INTO Reponse (intitule, id_question, valide) VALUES("+ this.q.get(i).getReponse().get(j).getIntitule() +", "+ this.q.get(i).getId() +", "+ this.q.get(i).getReponse().get(j).isValide() +" )");
+            }
+        }
+    }
     
 } 
