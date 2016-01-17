@@ -230,7 +230,6 @@ public class PanelEtudiant extends JPanel {
                     i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
-                        System.out.println("OUI");
                     }
                    
                 }
@@ -245,6 +244,8 @@ public class PanelEtudiant extends JPanel {
 
         });
         this.add(bt_Effectuer, c);
+        
+        this.setVisible(true);
         
         bt_note.addActionListener(new ActionListener() {
 
@@ -354,6 +355,7 @@ public class PanelEtudiant extends JPanel {
             return;
         }
         affQcm();
+        affiche_qcm.repaint();
     }
 
     public void selectQcm() {
