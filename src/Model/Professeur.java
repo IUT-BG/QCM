@@ -50,5 +50,8 @@ public class Professeur extends Personne{
         for(int i=0; i<liste.size(); i++)
             System.out.println(liste.get(i));
     }
-       
+    
+    public ArrayList<Classe> getListeClasse(){
+        return this.liste_classe;
+    }
 }  

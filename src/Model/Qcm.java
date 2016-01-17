@@ -16,13 +16,13 @@ import java.sql.SQLException;
 public class Qcm {
     private int id;
     private String titre;
-    private int id_prof;
+    private Professeur prof;
     private ArrayList<Note> note;
     private ArrayList<Question> q;
 
-    public Qcm(String titre, int id_prof, ArrayList<Question> q) {
+    public Qcm(String titre, Professeur prof, ArrayList<Question> q) {
         this.titre = titre;
-        this.id_prof = id_prof;
+        this.prof = prof;
         this.q = q;
         this.note = new ArrayList(); 
     }
@@ -42,8 +42,8 @@ public class Qcm {
         return titre;
     }
 
-    public int getId_prof() {
-        return id_prof;
+    public Professeur getProf() {
+        return prof;
     }
 
     public ArrayList<Note> getNote() {
@@ -70,7 +70,12 @@ public class Qcm {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
         
-        connexion.insert("INSERT INTO Qcm (titre, id_prof) VALUES(\" "+ this.titre +"\", \" "+ this.id_prof +"\" )");
+        String access = "";
+        for (int i = 0; i < this.prof.getListeClasse().size(); i++) {
+            access += this.prof.getListeClasse().get(i).getNom() + "|";
+        }
+        
+        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\" "+ this.titre +"\", \" "+ prof.getId() +"\", \" " + access + " \" )");
         
         ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
         try{

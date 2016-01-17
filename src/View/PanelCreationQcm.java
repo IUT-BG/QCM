@@ -5,6 +5,7 @@
  */
 package View;
 import Model.Connexion;
+import Model.Professeur;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
@@ -29,7 +30,7 @@ import java.util.regex.Pattern;
  * @author toshiba
  */
 public class PanelCreationQcm extends JPanel{
-    int id_prof;
+    private Professeur prof;
     
     private JPanel pan;
     private JFrame frame;
@@ -53,9 +54,9 @@ public class PanelCreationQcm extends JPanel{
     
     private JButton valider;
     
-    public PanelCreationQcm(JFrame frame, int id_prof){
+    public PanelCreationQcm(JFrame frame, Professeur prof){
         this.frame = frame;
-        this.id_prof = id_prof;
+        this.prof = prof;
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -183,7 +184,7 @@ public class PanelCreationQcm extends JPanel{
                         }
                         
                         if(valide){
-                            Qcm qcm = new Qcm(titre.getText(), id_prof, question);
+                            Qcm qcm = new Qcm(titre.getText(), prof, question);
                             qcm.publish();
                         }
                         else
