@@ -24,7 +24,9 @@ public class Qcm {
         this.q = q;
         this.note = new ArrayList(); 
     }
-    
+    public Qcm(String titre){
+        this.titre = titre;
+    }
     public void modifierQcm(ArrayList<Question> nouvelle){
         if(note == null)
             this.q = nouvelle;
