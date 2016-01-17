@@ -22,14 +22,17 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author toshiba
  */
 public class PanelCreationQcm extends JPanel{
+    int id_prof;
     
     private JPanel pan;
+    private JFrame frame;
     
     private JTextField titre;
     private ArrayList<Question> question;
@@ -38,14 +41,21 @@ public class PanelCreationQcm extends JPanel{
     private ArrayList<JPanel> question_panel;
     private int action;
     
+    private Reponse lock;
+    JTextField rep;
+    JRadioButton juste;
+    
     private JButton ajout_question;
     private ArrayList<JButton> ajout_reponse;
     private ArrayList<JRadioButton> ajout_radio;
+    private int reponse_cumule;
     private int indice;
     
     private JButton valider;
     
-    public PanelCreationQcm(){
+    public PanelCreationQcm(JFrame frame, int id_prof){
+        this.frame = frame;
+        this.id_prof = id_prof;
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -63,10 +73,17 @@ public class PanelCreationQcm extends JPanel{
                 pan.removeAll();
                 Question q = new Question();
                 question.add(q);
+                
+                
+                JTextField t = new JTextField();
+                t.setPreferredSize(new Dimension(200, 20));
+                question_intitule.add(t);
+                
                 JButton aj = new JButton("+ Réponse");
                 ajout_reponse.add(aj);
                 
                 JPanel Q = new JPanel();
+                Q.setBorder(BorderFactory.createTitledBorder("Réponses question " + (question_panel.size()+1)));
                 question_panel.add(Q);
                     
                 affichage(c);
@@ -87,6 +104,7 @@ public class PanelCreationQcm extends JPanel{
         ajout_reponse = new ArrayList();
         ajout_radio = new ArrayList();
         question_panel = new ArrayList();
+        reponse_cumule = 0;
         action = 0;
         //init des autres éléments
             //JTextField
@@ -103,54 +121,124 @@ public class PanelCreationQcm extends JPanel{
         c.gridx = 0;
         this.add(te);
         
+        valider.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    if(!Pattern.matches("^$", titre.getText())){
+                        boolean valide = true;
+                        boolean une_reponse_juste = false;
+                        int compteur_reponse = 0;
+                        
+                        if(question.size() == 0)
+                            valide = false;
+                        
+                        for(int i = 0; i<question.size(); i++){
+                            if(!Pattern.matches("^$", question_intitule.get(i).getText())){
+                                
+                                for(int j=0; j<question.get(i).getReponse().size(); j++){
+                                    if(Pattern.matches("^$", question_intitule.get(i).getText())){
+                                        question.get(i).getReponse().remove(compteur_reponse);
+                                        reponse_intitule.remove(compteur_reponse);
+                                    }
+                                    else{
+                                        if(ajout_radio.get(compteur_reponse).isSelected() == true)
+                                            une_reponse_juste = true;
+                                    }
+                                    
+                                    compteur_reponse ++;  
+                                }
+                                
+                                if(question.get(i).getReponse().size() < 2)
+                                    valide = false;
+                                
+                                if(!une_reponse_juste)
+                                    valide = false;
+                                
+                                une_reponse_juste = false;  
+                            }
+                            else{
+                                for(int k=0; k<question.get(i).getReponse().size(); k++){
+                                    question.get(i).getReponse().remove(k);
+                                    reponse_intitule.remove(compteur_reponse + k);
+                                }
+                                question.remove(i);
+                                question_intitule.remove(i);
+                            }
+                        }
+                        
+                        
+                        compteur_reponse = 0;
+                        for(int i = 0; i<question.size(); i++){
+                                question.get(i).setIntitule(question_intitule.get(i).getText());
+                                
+                                for(int j=0; j<question.get(i).getReponse().size(); j++){
+                                    //On ajoute la question
+                                    question.get(i).getReponse().get(j).setIntitule(reponse_intitule.get(compteur_reponse).getText());
+                                    question.get(i).getReponse().get(j).setValide(ajout_radio.get(compteur_reponse).isSelected());
+
+                                    compteur_reponse ++; 
+                                }
+                        }
+                        
+                        if(valide){
+                            Qcm qcm = new Qcm(titre.getText(), id_prof, question);
+                            qcm.publish();
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame,"Pour que le QCM soit validé il doit respécter différentes règle :\n"
+                                                                + "- Chaque question doit avoir au moins 2 réponse\n"
+                                                                + "- Chaque question doit avoir au moins 1 réponse juste\n"
+                                                                + "- Le QCM doit avoir au moins une question\n",
+                                    "Inane warning",JOptionPane.WARNING_MESSAGE);
+                    }
+                    else
+                        JOptionPane.showMessageDialog(frame,"Vous devez rentrer un titre au QCM !","Inane warning",JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        
     }
     
     public void affichage(GridBagConstraints c){
-        pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
-        //GridBagConstraints cQ = new GridBagConstraints();
         
-        question_intitule.clear();
+        pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
         
         for(int i=0; i<question.size(); i++){
             JPanel panelQ = new JPanel();
             
             //titre
-            JTextField t = new JTextField();
-            t.setPreferredSize(new Dimension(200, 20));
-            question_intitule.add(t);
             
             panelQ.add(new JLabel("Question" + (i+1) + " : "));
-            panelQ.add(t);
+            panelQ.add(question_intitule.get(i));
             
             //reponsses
-            question_panel.get(i).removeAll();
             
             question_panel.get(i).setLayout(new GridBagLayout());
             GridBagConstraints cR = new GridBagConstraints();
             cR.gridy = cR.gridx = 0;
-                    
+            
             for(int j=0; j<question.get(i).getReponse().size(); j++){
-                
-                question_panel.get(i).add(reponse_intitule.get(j), cR);
+               
+                cR.gridy = j;
+                question_panel.get(i).add(reponse_intitule.get(reponse_cumule), cR);
                 
                 cR.gridx = 1;
-                question_panel.get(i).add(ajout_radio.get(j), cR);
+                question_panel.get(i).add(ajout_radio.get(reponse_cumule), cR);
                 cR.gridx = 0;
                 
-                question_panel.get(i).validate();
-                
-                cR.gridy++;
+                reponse_cumule ++;
             }
-            
             panelQ.add(question_panel.get(i));
             panelQ.add(ajout_reponse.get(i));
             
-            panelQ.revalidate();
-            panelQ.repaint();
+            //panelQ.repaint();
             
             
             pan.add(panelQ);
         }
+        reponse_cumule = 0;
+        
         
         c.gridy ++ ;
         this.add(pan, c);
@@ -164,10 +252,9 @@ public class PanelCreationQcm extends JPanel{
         c.gridy++;
         this.add(valider, c);
         
-        this.revalidate();
-        this.repaint();
+        this.validate();
         this.setVisible(true);
-        
+       
         
         //------------Action Liseners----------//////////
         for(indice=action; indice<ajout_reponse.size(); indice++){
@@ -177,48 +264,25 @@ public class PanelCreationQcm extends JPanel{
                 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    
+                    lock = new Reponse();
+                    rep = new JTextField();
+                    juste = new JRadioButton("Juste");
+                    
                     pan.removeAll();
-                    JTextField rep = new JTextField();
                     rep.setPreferredSize(new Dimension(200, 20));
                     reponse_intitule.add(rep);
                     
-                    ajout_radio.add(new JRadioButton("Juste"));
-                    
+                    ajout_radio.add(juste);
                     //On rentre une reponse pour l'aspet graphique
-                    Reponse lock = new Reponse();
+                    
                     question.get(var).setReponse(lock);
                     
                     affichage(c);
                 }
             });
         }
-        
-        valider.addActionListener(new ActionListener(){
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                    if(titre.getText() != ""){
-                        
-                        int compteur_reponse = 0;
-                        for(int i = 0; i<question.size(); i++){
-                            for(int j=0; j<question.get(i).getReponse().size(); j++){
-                                //On ajoute la question
-                                question.get(i).getReponse().get(j).setIntitule(reponse_intitule.get(compteur_reponse).getText());
-                                question.get(i).getReponse().get(j).setValide(ajout_radio.get(compteur_reponse).isSelected());
-                                
-                                compteur_reponse ++; 
-                            }
-                        }
-                        
-                        Qcm qcm = new Qcm(titre.getText(), 0, question);
-                        qcm.publish();
-                    }
-                    else
-                        System.err.println("Vous devez rentrer un titre  u QCM");
-                }
-            });
         /////////-------------------------//////////////////
-        
+
     }
 }

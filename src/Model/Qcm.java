@@ -6,6 +6,8 @@
 package Model;
 
 import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -68,13 +70,24 @@ public class Qcm {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
         
-        connexion.insert("INSERT INTO Qcm (titre, id_prof) VALUES("+ this.titre +", "+ this.id_prof +" )");
+        connexion.insert("INSERT INTO Qcm (titre, id_prof) VALUES(\" "+ this.titre +"\", \" "+ this.id_prof +"\" )");
         
+        ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
+        try{
+            this.id = new_id.getInt("COUNT(*)");
+        } catch (SQLException ex) {}
+        
+        int id_q = 0;
         for(int i = 0; i<this.q.size(); i++){
-            connexion.insert("INSERT INTO Question (intitule, id_qcm) VALUES("+ this.q.get(i).getIntitule() +", "+ this.id +" )");
+            connexion.insert("INSERT INTO Question (intitule, id_qcm) VALUES(\" "+ this.q.get(i).getIntitule() +" \", \" "+ this.id +" \" )");
+            
+            ResultSet new_q = connexion.query("SELECT COUNT(*) FROM Question");
+            try{
+                id_q = new_q.getInt("COUNT(*)");
+            } catch (SQLException ex) {}
             
             for(int j = 0; j<this.q.get(i).getReponse().size(); j++){
-                connexion.insert("INSERT INTO Reponse (intitule, id_question, valide) VALUES("+ this.q.get(i).getReponse().get(j).getIntitule() +", "+ this.q.get(i).getId() +", "+ this.q.get(i).getReponse().get(j).isValide() +" )");
+                connexion.insert("INSERT INTO Reponse (intitule, id_question, valide) VALUES(\" "+ this.q.get(i).getReponse().get(j).getIntitule() +" \", \" "+ id_q +" \", \" "+ this.q.get(i).getReponse().get(j).isValide() +" \" )");
             }
         }
     }
