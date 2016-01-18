@@ -17,6 +17,9 @@ import java.util.logging.Logger;
  */
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
+
+    public Professeur(String nom, String prenom, int id) {
+        super(nom,prenom,id);
     int id;
     
     public Professeur() {
@@ -25,7 +28,6 @@ public class Professeur extends Personne{
     public Professeur(int id) {
         this.id = id;
     }
-    
     public ArrayList<Note> voirResultats(Qcm qcm){
         return qcm.getNote();
     }
@@ -55,6 +57,9 @@ public class Professeur extends Personne{
         for(int i=0; i<liste.size(); i++)
             System.out.println(liste.get(i));
     }
+    public String toString()
+    {
+        return id+" - "+prenom+" "+nom+", Prof";
     
     public ArrayList<Classe> getListeClasse(){
         return this.liste_classe;

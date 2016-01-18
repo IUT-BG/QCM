@@ -19,8 +19,8 @@ public class Etudiant extends Personne{
     public Classe classe;
     public Qcm qcm;
     
-    public Etudiant(){
-        super();
+    public Etudiant(String nom, String prenom, int id){
+        super(nom,prenom,id);
         classe = new Classe();
     }
     
@@ -79,5 +79,8 @@ public class Etudiant extends Personne{
     public void setClasse(Classe classe) {
         this.classe = classe;
     }
-    
+    public String toString()
+    {
+        return id+" - "+prenom+" "+nom+", Etudiant";
+    }    
 }  

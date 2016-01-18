@@ -53,5 +53,4 @@ public class Personne {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
-  
 } 
