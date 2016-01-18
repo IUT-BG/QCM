@@ -60,8 +60,8 @@ public class PanelEtudiant extends JPanel {
     JScrollPane jsp;
     Connexion co;
 
-    public PanelEtudiant() {
-        initialisation_bd();
+    public PanelEtudiant(Etudiant etu) {
+        this.etu=etu;
         initialisation();
         affQcm();
         ajoutListe();
