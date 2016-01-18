@@ -127,11 +127,19 @@ public class PanelCreationQcm extends JPanel {
         //JComboBox
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
-        ResultSet result_classes = connexion.query("SELECT classe FROM Personne WHERE id = "+ prof.getId());
         
+        ResultSet result_count = connexion.query("SELECT COUNT(*) FROM Classe");
         String[] s = null;
+        
         try {
-            s = (result_classes.getString("classe")).split("|");
+            s = new String[result_count.getInt("COUNT(*)")];
+            ResultSet result_classes = connexion.query("SELECT intitule FROM Classe");
+            
+            int i=0;
+            while(result_classes.next()){
+                s[i] = (result_classes.getString("intitule"));
+                i++;
+            }
         } catch (SQLException ex) {
         }
 
