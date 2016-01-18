@@ -4,14 +4,15 @@
  * and open the template in the editor.
  */
 package Model;
+
 import java.util.ArrayList;
 
 /**
  *
  * @author toshiba
  */
-
 public class Question {
+
     private int id;
     private String intitule;
     private ArrayList<Reponse> reponse;
@@ -20,8 +21,7 @@ public class Question {
         this.intitule = null;
         this.reponse = new ArrayList();
     }
-    
-    
+
     public Question(String intitule, ArrayList<Reponse> reponse) {
         this.intitule = intitule;
         this.reponse = reponse;
@@ -50,5 +50,5 @@ public class Question {
     public void setReponse(Reponse reponse) {
         this.reponse.add(reponse);
     }
-    
-} 
+
+}

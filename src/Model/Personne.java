@@ -10,28 +10,33 @@ package Model;
  * @author toshiba
  */
 public class Personne {
+
     String nom;
     String prenom;
     int id;
-    
-    public Personne(){
+
+    public Personne() {
         nom = null;
         prenom = null;
         id = -1;
     }
-    
-    public Personne(String nom, String prenom, int id){
+
+    public Personne(int id) {
+        this.id = id;
+    }
+
+    public Personne(String nom, String prenom, int id) {
         this.nom = nom;
         this.prenom = prenom;
         this.id = id;
     }
-    
-    public void Connexion(){
-        return ;
+
+    public void Connexion() {
+        return;
     }
-    
-    public void Deconnexion(){
-        return ;
+
+    public void Deconnexion() {
+        return;
     }
 
     public String getNom() {
@@ -53,4 +58,4 @@ public class Personne {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
-} 
+}
