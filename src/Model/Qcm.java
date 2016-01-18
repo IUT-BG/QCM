@@ -22,6 +22,12 @@ public class Qcm {
     private ArrayList<Question> q;
     private String access;
 
+    public Qcm(String titre, Professeur prof, ArrayList<Question> question) {
+        this.titre = titre;
+        this.prof = prof;
+        this.q = question;
+    }
+
     public Qcm(String titre, Professeur prof, ArrayList<Question> q, String classe) {
         this.titre = titre;
         this.prof = prof;
@@ -45,9 +51,9 @@ public class Qcm {
             System.err.println("Modification ipossible : un élève à déjà rempli ce Qcm");
         }
     }
-    
-    public void supprimerQcm(){
-        
+
+    public void supprimerQcm() {
+
     }
 
     public int getId() {
@@ -86,7 +92,7 @@ public class Qcm {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
 
-        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES('"+ this.titre + "','" + prof.getId() + "','" + this.access + "');");
+        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES('" + this.titre + "','" + prof.getId() + "','" + this.access + "');");
 
         ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
         try {
