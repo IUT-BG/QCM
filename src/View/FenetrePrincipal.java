@@ -9,7 +9,7 @@ import Model.Etudiant;
 import Model.Personne;
 import Model.Professeur;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -41,11 +41,17 @@ public class FenetrePrincipal extends JFrame{
     
     public PanelConnexion(Personne pers)
     {
+        this.setBackground(new Color(0x34495e));
         l_warning = new JLabel("");
         l_warning.setForeground(Color.red);
         l_user = new JLabel("Identifiant :");
+        l_user.setForeground(Color.white);
+        l_user.setFont(new Font("Century", 0, 20));
         l_password = new JLabel("Mot de passe :");
+        l_password.setForeground(Color.white);
+        l_password.setFont(new Font("Century", 0, 20));
         t_user = new JTextField(8);
+        t_user.setDragEnabled(true);
         p_password = new JPasswordField(8);
         b_login = new JButton("Valider");
         b_login.addActionListener((ActionEvent e) -> {
@@ -69,7 +75,7 @@ public class FenetrePrincipal extends JFrame{
     {
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.ipadx=10;c.ipady=10;
+        c.ipadx=20;c.ipady=20;
         c.gridx=0;c.gridy=0;
         c.gridwidth=2;
         this.add(l_warning,c);
@@ -118,6 +124,8 @@ public class FenetrePrincipal extends JFrame{
         else
             pers = new Etudiant(res.getString(3),res.getString(4),res.getInt(2));
         System.out.println(pers);
+        initialisation();
+        rafraichir();
         return true;
     }
 }
@@ -133,23 +141,21 @@ public class FenetrePrincipal extends JFrame{
         
         initialisation();
         rafraichir();
-        
-        attendreCo();
-        this.remove(pano);
-        if(pers.getClass()==Professeur.class)
-            pano=new PanelProfesseur((Professeur)pers);
-        else
-            pano=new PanelEtudiant((Etudiant)pers);
-        initialisation();
-        rafraichir();
     }
     
     public void initialisation(){
+        this.remove(pano); 
+        if(pers!=null)
+            if(pers.getClass()==Professeur.class)
+                pano=new PanelProfesseur((Professeur)pers);
+            else
+                pano=new PanelEtudiant((Etudiant)pers);
         this.add(pano);
-        int sizeX=650;
-        int sizeY=800;
-        System.out.println();
-        this.setPreferredSize(new Dimension(sizeX, sizeY));    
+        //        int sizeX=650;
+        //        int sizeY=800;
+        //        System.out.println();
+        //        this.setPreferredSize(new Dimension(sizeX, sizeY));
+        this.setExtendedState(this.MAXIMIZED_BOTH);
     }
     
     public void rafraichir(){
