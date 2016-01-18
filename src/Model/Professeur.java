@@ -17,9 +17,11 @@ import java.util.logging.Logger;
  */
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
+    private ArrayList<Integer> id_qcm;
 
     public Professeur() {
         id = 0;
+        id_qcm = new ArrayList<Integer>();
     }
     
     public ArrayList<Note> voirResultats(Qcm qcm){
@@ -33,10 +35,11 @@ public class Professeur extends Personne{
             
             ArrayList<String> liste = new ArrayList<String>();
             
-            ResultSet resultSet = connexion.query("SELECT titre FROM Qcm WHERE id_prof="+Integer.toString(id)+";");
+            ResultSet resultSet = connexion.query("SELECT id,titre FROM Qcm WHERE id_prof="+Integer.toString(id)+";");
         try {
             while (resultSet.next()) {
                 liste.add(resultSet.getString("titre"));
+                id_qcm.add(resultSet.getInt("id"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,6 +53,10 @@ public class Professeur extends Personne{
         
         for(int i=0; i<liste.size(); i++)
             System.out.println(liste.get(i));
+    }
+
+    public ArrayList<Integer> getId_qcm() {
+        return id_qcm;
     }
        
 }  

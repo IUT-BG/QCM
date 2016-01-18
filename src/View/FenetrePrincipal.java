@@ -16,28 +16,28 @@ import javax.swing.JPanel;
 public class FenetrePrincipal extends JFrame{
     
     public FenetrePrincipal(){
-        //JPanel panel_etu = new PanelEtudiant();
+        JPanel panel_etu = new PanelEtudiant();
         JPanel panel_prof = new PanelProfesseur();
         this.setTitle("Qcm");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
         
-        PanelCreationQcm pan = new PanelCreationQcm();
-        this.add(pan);
-        this.add(panel_etu);
+        //this.add(panel_etu);
+        this.add(panel_prof);
         
         initialisation();
         rafraichir();
     }
     
     public void initialisation(){
-        int sizeX=650;
-        int sizeY=800;
+        int sizeX=450;
+        int sizeY=600;
         System.out.println();
         this.setPreferredSize(new Dimension(sizeX, sizeY));    
     }
     
     public void rafraichir(){
+        
         this.pack();
         this.setVisible(true);
     }
