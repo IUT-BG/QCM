@@ -19,12 +19,14 @@ public class Qcm {
     private Professeur prof;
     private ArrayList<Note> note;
     private ArrayList<Question> q;
+    private String access;
 
-    public Qcm(String titre, Professeur prof, ArrayList<Question> q) {
+    public Qcm(String titre, Professeur prof, ArrayList<Question> q, String classe) {
         this.titre = titre;
         this.prof = prof;
         this.q = q;
         this.note = new ArrayList(); 
+        this.access = classe;
     }
     
     public void modifierQcm(ArrayList<Question> nouvelle){
@@ -75,7 +77,7 @@ public class Qcm {
             access += this.prof.getListeClasse().get(i).getNom() + "|";
         }
         
-        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\" "+ this.titre +"\", \" "+ prof.getId() +"\", \" " + access + " \" )");
+        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\" "+ this.titre +"\", \" "+ prof.getId() +"\", \" " + this.access + " \" )");
         
         ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
         try{

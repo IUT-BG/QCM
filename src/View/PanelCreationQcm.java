@@ -25,6 +25,10 @@ import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import java.util.regex.Pattern;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.lang.String;
+
 /**
  *
  * @author toshiba
@@ -51,6 +55,8 @@ public class PanelCreationQcm extends JPanel{
     private ArrayList<JRadioButton> ajout_radio;
     private int reponse_cumule;
     private int indice;
+    
+    private JComboBox classes;
     
     private JButton valider;
     
@@ -115,6 +121,18 @@ public class PanelCreationQcm extends JPanel{
             //JButton
         ajout_question = new JButton("+ Question");
         valider = new JButton("Valider");
+            //JComboBox
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect();
+        ResultSet result_classes = connexion.query("SELECT classe FROM Professeur WHERE id = \" "+ prof.getId() +"\"");
+        
+        String[] s = null;
+        try{
+            s = (result_classes.getString("classe")).split("|");
+        } catch (SQLException ex) {}
+        
+        classes = new JComboBox(s);
+        
         //---------------------------
         te.add(new JLabel("Titre : "), c);
         c.gridx = 1;
@@ -186,7 +204,7 @@ public class PanelCreationQcm extends JPanel{
                         }
                         
                         if(valide){
-                            Qcm qcm = new Qcm(titre.getText(), prof, question);
+                            Qcm qcm = new Qcm(titre.getText(), prof, question, classes.getItemAt(classes.getSelectedIndex()).toString());
                             qcm.publish();
                         }
                         else
