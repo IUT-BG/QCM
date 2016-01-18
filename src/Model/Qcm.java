@@ -18,11 +18,12 @@ public class Qcm {
     private ArrayList<Note> note;
     private ArrayList<Question> q;
 
-    public Qcm(String titre, int id_prof, ArrayList<Question> q) {
+    public Qcm(String titre, int id_prof, ArrayList<Question> q, int id) {
         this.titre = titre;
         this.id_prof = id_prof;
         this.q = q;
         this.note = new ArrayList(); 
+        this.id = id;
     }
     
     public void modifierQcm(ArrayList<Question> nouvelle){

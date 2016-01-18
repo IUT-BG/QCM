@@ -126,13 +126,13 @@ public class PanelEtudiant extends JPanel {
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
-                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest));
-                ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu FROM Note n WHERE n.id_qcm ="
+                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest, resultSet.getInt("id")));
+                ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu, n.id_qcm FROM Note n WHERE n.id_qcm ="
                         + resultSet.getString("id") + " AND n.id_etu =" + etu.getId() + " ORDER BY n.id ASC");
                 while (resultSet_note.next()) {
                     for (Qcm q : liste_q) {
                         if (q.getId() == resultSet_note.getInt("id_qcm")) {
-                            q.ajouterNote(new Note(resultSet_note.getInt("id_etu"), resultSet_note.getInt("note")));
+                            q.ajouterNote(new Note(resultSet_note.getInt("note"), resultSet_note.getInt("id_etu"), q.getId()));
                             System.out.println("Note add pour le qcm : " + q.getId());
                         }
                     }
@@ -246,7 +246,8 @@ public class PanelEtudiant extends JPanel {
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà notEEEé");
+                    System.out.println("sefsgdr");
+                    JOptionPane.showMessageDialog(parentFrame, " déjà noté");
                 }
             }
 
@@ -342,8 +343,8 @@ public class PanelEtudiant extends JPanel {
                     JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
                     return;
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
-                    Note n = new Note(etu.getId(), final_note);
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé. Titire & id du QCM : "+etu.getQcm().getTitre()+" "+etu.getQcm().getId());
+                    Note n = new Note( final_note,etu.getId(),etu.getQcm().getId());
                     etu.getQcm().ajouterNote(n);
                     n.addNote(etu);
                     etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
