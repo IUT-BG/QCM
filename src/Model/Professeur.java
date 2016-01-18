@@ -17,10 +17,12 @@ import java.util.logging.Logger;
  */
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
+    
+    int id;
 
     public Professeur(String nom, String prenom, int id) {
         super(nom,prenom,id);
-    int id;
+    }
     
     public Professeur() {
     }
@@ -60,6 +62,7 @@ public class Professeur extends Personne{
     public String toString()
     {
         return id+" - "+prenom+" "+nom+", Prof";
+    }
     
     public ArrayList<Classe> getListeClasse(){
         return this.liste_classe;

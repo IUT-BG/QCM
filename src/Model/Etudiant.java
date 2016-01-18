@@ -29,9 +29,6 @@ public class Etudiant extends Personne{
         this.classe = classe;
     }
     
-    public Etudiant( String nom, String prenom, int id){
-        super(nom, prenom, id);
-    }
     
     /* A METTRE DANS PanelEtudiant
     

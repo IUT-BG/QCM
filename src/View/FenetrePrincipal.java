@@ -129,7 +129,7 @@ public class FenetrePrincipal extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
         
-        PanelCreationQcm pan = new PanelCreationQcm();
+        //PanelCreationQcm pan = new PanelCreationQcm();
         
         initialisation();
         rafraichir();
