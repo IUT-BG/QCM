@@ -142,6 +142,11 @@ public class PanelCreationQcm extends JPanel {
         te.add(titre, c);
         c.gridx = 0;
         this.add(te);
+        c.gridx = 1;
+        this.add(new JLabel("Classe : "), c);
+        c.gridx ++ ;
+        this.add(classes, c);
+        c.gridx = 0;
 
         valider.addActionListener(new ActionListener() {
 
