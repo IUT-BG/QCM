@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  */
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
+    private ArrayList<Integer> id_qcm;
     
     int id;
 

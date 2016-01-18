@@ -143,7 +143,6 @@ public class FenetrePrincipal extends JFrame {
         initialisation();
         rafraichir();
     }
-    }
 
     public void initialisation() {
         this.remove(pano);
@@ -168,6 +167,12 @@ public class FenetrePrincipal extends JFrame {
     public void attendreCo() {
         while (pers == null);
     }
+    
+    public void rafraichir() {
+        this.pack();
+        this.setVisible(true);
+    }
 }
 
-    public void rafraichir() {
+    
+

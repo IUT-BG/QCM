@@ -8,7 +8,6 @@ import Model.Connexion;
 import Model.Note;
 import Model.Professeur;
 import Model.Qcm;
-import Test.TestQcm;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
@@ -33,9 +32,11 @@ public class PanelProfesseur extends JPanel{
     
     private ArrayList<JButton> note;
     private JButton creer;
-    private JButton modifier;
-    private JButton supprimer;
+    private ArrayList<JButton> modifier;
+    private ArrayList<JButton> supprimer;
     private Professeur pers;
+    private ArrayList<JLabel> titre;
+    private JPanel pano;
 
     public JLabel l_test;
 
@@ -55,9 +56,7 @@ public class PanelProfesseur extends JPanel{
         titre = new ArrayList<JLabel>();
         creer = new JButton();
         
-        p =new Professeur();
-        
-        ArrayList<String> liste = p.voirQcm();
+        ArrayList<String> liste = pers.voirQcm();
         
         for(int i=0;i<liste.size(); i++){
             titre.add(new JLabel(liste.get(i)));
@@ -72,9 +71,6 @@ public class PanelProfesseur extends JPanel{
             
             global.gridx++;
             this.add(note.get(i), global);
-            
-            global.gridx++;
-            this.add(creer.get(i), global);
             
             global.gridx++;
             this.add(modifier.get(i), global);
@@ -101,17 +97,17 @@ public class PanelProfesseur extends JPanel{
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
             
-        ResultSet resultSet = connexion.query("SELECT * FROM Note WHERE id_qcm="+Integer.toString(p.getId_qcm().get(ind))+";");
+        ResultSet resultSet = connexion.query("SELECT * FROM Note WHERE id_qcm="+Integer.toString(pers.getId_qcm().get(ind))+";");
         try {
             while (resultSet.next()) {
-                liste_notes.add(new Note(resultSet.getInt("id_etu"), resultSet.getFloat("note")));
+                liste_notes.add(new Note(resultSet.getFloat("note"),resultSet.getInt("id_etu")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         String nom_classe="";
-        resultSet = connexion.query("SELECT access FROM Qcm WHERE id="+Integer.toString(p.getId_qcm().get(ind))+";");
+        resultSet = connexion.query("SELECT access FROM Qcm WHERE id="+Integer.toString(pers.getId_qcm().get(ind))+";");
         try {
             while (resultSet.next()) {
                 nom_classe = resultSet.getString("access");
