@@ -20,6 +20,13 @@ public class Professeur extends Personne{
 
     public Professeur(String nom, String prenom, int id) {
         super(nom,prenom,id);
+    int id;
+    
+    public Professeur() {
+    }
+    
+    public Professeur(int id) {
+        this.id = id;
     }
     public ArrayList<Note> voirResultats(Qcm qcm){
         return qcm.getNote();
@@ -53,5 +60,12 @@ public class Professeur extends Personne{
     public String toString()
     {
         return id+" - "+prenom+" "+nom+", Prof";
+    
+    public ArrayList<Classe> getListeClasse(){
+        return this.liste_classe;
+    }
+    
+    public int getId(){
+        return this.id;
     }
 }  
