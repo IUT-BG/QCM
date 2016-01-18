@@ -72,10 +72,10 @@ public class PanelEtudiant extends JPanel {
         //peut etre mettre dans etudiant et mettre load classe dans classe
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
-        
+
         Connexion connexion_quest = new Connexion("QCM.sqlite");
         connexion_quest.connect();
-        
+
         Connexion connexion_rep = new Connexion("QCM.sqlite");
         connexion_rep.connect();
         //faire l'identification etu
@@ -103,36 +103,36 @@ public class PanelEtudiant extends JPanel {
                     + " WHERE Classe.intitule = '" + classe.getNom()
                     + "' AND Classe.intitule = Qcm.access ORDER BY Qcm.id ASC ");
             System.out.println(resultSet_qcm);
-            
+
             ArrayList<Reponse> liste_rep = new ArrayList();
             ArrayList<Qcm> liste_q = new ArrayList();
             ArrayList<Question> liste_quest = new ArrayList();
-            
+
             while (resultSet_qcm.next()) {
-                System.out.println("On fait le QCM avec un id : "+resultSet.getString("id"));
-                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm ="+resultSet.getString("id")+" ORDER BY q.id ASC");
+                System.out.println("On fait le QCM avec un id : " + resultSet.getString("id"));
+                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm =" + resultSet.getString("id") + " ORDER BY q.id ASC");
                 liste_quest = new ArrayList();
                 while (resultSet_question.next()) {
-                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question ="+resultSet_question.getString("id")+" ORDER BY r.id ASC");
+                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question =" + resultSet_question.getString("id") + " ORDER BY r.id ASC");
                     liste_rep = new ArrayList();
-                    while ( resultSet_reponse.next() ){
-                        liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
-                        System.out.println("ajout HELLO : "+ resultSet_reponse.getString("intitule"));
-                        System.out.println(" valide ? : "+resultSet_reponse.getBoolean("valide"));
+                    while (resultSet_reponse.next()) {
+                        liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"), resultSet_reponse.getBoolean("valide")));
+                        System.out.println("ajout HELLO : " + resultSet_reponse.getString("intitule"));
+                        System.out.println(" valide ? : " + resultSet_reponse.getBoolean("valide"));
                         //remplir a liste de rep
                     }
-                    liste_quest.add(new Question(resultSet_question.getString("intitule"),liste_rep));
-                    System.out.println("ajout question : "+ resultSet_question.getString("intitule"));
+                    liste_quest.add(new Question(resultSet_question.getString("intitule"), liste_rep));
+                    System.out.println("ajout question : " + resultSet_question.getString("intitule"));
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
-                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest, resultSet.getInt("id")));
+                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"), liste_quest, resultSet.getInt("id")));
                 ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu, n.id_qcm FROM Note n WHERE n.id_qcm ="
                         + resultSet.getString("id") + " AND n.id_etu =" + etu.getId() + " ORDER BY n.id ASC");
                 while (resultSet_note.next()) {
                     for (Qcm q : liste_q) {
                         if (q.getId() == resultSet_note.getInt("id_qcm")) {
-                            q.ajouterNote(new Note(resultSet_note.getInt("note"), resultSet_note.getInt("id_etu"), q.getId()));
+                            q.ajouterNote(new Note(resultSet_note.getInt("note"), resultSet_note.getInt("id_etu")));
                             System.out.println("Note add pour le qcm : " + q.getId());
                         }
                     }
@@ -140,7 +140,7 @@ public class PanelEtudiant extends JPanel {
             }
             classe.setListe_qcm(liste_q);
             etu.setClasse(classe);
-            
+
             //etu.setQcm(liste_q.get(0));
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,7 +154,7 @@ public class PanelEtudiant extends JPanel {
         if (parentWindow instanceof Frame) {
             parentFrame = (Frame) parentWindow;
         }
-        
+
         etu.setQcm(null);
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
@@ -234,35 +234,35 @@ public class PanelEtudiant extends JPanel {
                 Qcm qcm_test = null;
                 int i = 0;
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
-                    System.out.println("SI : "+q.getTitre()+" est egale avec : "+etu.getClasse().getListe_qcm().get(i).getTitre());
+                    System.out.println("SI : " + q.getTitre() + " est egale avec : " + etu.getClasse().getListe_qcm().get(i).getTitre());
                     i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
                     }
-                   
+
                 }
                 EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
+                x.test();
                 //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
                 } else {
-                    System.out.println("sefsgdr");
-                    JOptionPane.showMessageDialog(parentFrame, " déjà noté");
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté");
                 }
             }
 
         });
         this.add(bt_Effectuer, c);
-        
+
         this.setVisible(true);
-        
+
         bt_note.addActionListener(new ActionListener() {
 
-           @Override
+            @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource()== bt_note){
+                if (e.getSource() == bt_note) {
                     VisuNotes notes = new VisuNotes();
-                    
+
                 }
             }
         });
@@ -273,13 +273,15 @@ public class PanelEtudiant extends JPanel {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
         for (Qcm qc : etu.getClasse().getListe_qcm()) {
-            ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+                ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+            
         }
     }
 
     public void affQcm() {
-        if(etu.getQcm() == null)
+        if (etu.getQcm() == null) {
             return;
+        }
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -325,7 +327,7 @@ public class PanelEtudiant extends JPanel {
             c.gridy = c.gridy + 1;
             c.gridx = 0;
         }
-        c.gridy ++;
+        c.gridy++;
         c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
@@ -343,8 +345,8 @@ public class PanelEtudiant extends JPanel {
                     JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
                     return;
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé. Titire & id du QCM : "+etu.getQcm().getTitre()+" "+etu.getQcm().getId());
-                    Note n = new Note( final_note,etu.getId(),etu.getQcm().getId());
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé. Titire & id du QCM : " + etu.getQcm().getTitre() + " " + etu.getQcm().getId());
+                    Note n = new Note(final_note, etu.getId());
                     etu.getQcm().ajouterNote(n);
                     n.addNote(etu);
                     etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
@@ -365,58 +367,56 @@ public class PanelEtudiant extends JPanel {
         }
         affQcm();
         affiche_qcm.repaint();
+        affiche_qcm.validate();
     }
 
     public void selectQcm() {
 
     }
-    
-    public class VisuNotes extends JDialog{
-                private ArrayList<JLabel> liste;
-                
-                public VisuNotes(){
-                    super(parentFrame,"notes de l'étudiant n°"+etu.getId(),true);
-                    liste=new ArrayList<>();
-                   
-                    init();
-                    this.pack();
-                    this.setVisible(true);
-                    
-                  
-                    
-                }
-                public void init(){
-                    this.setLayout(new GridBagLayout());
-                    this.setLocationRelativeTo(parentFrame);
-                    
-                   
-                    
-                    for(int i = 0; i< etu.voirNotes().size(); i++){
-                        liste.add(new JLabel());
-                        liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(etu.voirNotes().get(i)));
 
-                }
-                    placement_notes();
-                }
-                
-                /*public void remplir_liste( ArrayList<Float> lNotes){
-                   JLabel lab =new JLabel();
-                    for(int i = 0; i<lNotes.size(); i++){
-                        liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(lNotes.get(i)));
-                    }
-                    
-                    
-                }*/
-                
-                public void placement_notes(){
-                    GridBagConstraints cont = new GridBagConstraints();
-                    for(int i=0; i<liste.size();i++){
-                          cont.gridx=0;
-                          cont.gridy = 1+i;
-                          this.add(liste.get(i),cont);
-                    }
-                }
-               
+    public class VisuNotes extends JDialog {
+
+        private ArrayList<JLabel> liste;
+
+        public VisuNotes() {
+            super(parentFrame, "notes de l'étudiant n°" + etu.getId(), true);
+            liste = new ArrayList<>();
+
+            init();
+            this.pack();
+            this.setVisible(true);
+
+        }
+
+        public void init() {
+            this.setLayout(new GridBagLayout());
+            this.setLocationRelativeTo(parentFrame);
+
+            for (int i = 0; i < etu.voirNotes().size(); i++) {
+                liste.add(new JLabel());
+                liste.get(i).setText("Note n°" + (i + 1) + ": " + Float.toString(etu.voirNotes().get(i)));
+
             }
+            placement_notes();
+        }
+
+        /*public void remplir_liste( ArrayList<Float> lNotes){
+         JLabel lab =new JLabel();
+         for(int i = 0; i<lNotes.size(); i++){
+         liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(lNotes.get(i)));
+         }
+                    
+                    
+         }*/
+        public void placement_notes() {
+            GridBagConstraints cont = new GridBagConstraints();
+            for (int i = 0; i < liste.size(); i++) {
+                cont.gridx = 0;
+                cont.gridy = 1 + i;
+                this.add(liste.get(i), cont);
+            }
+        }
+
+    }
 
 }

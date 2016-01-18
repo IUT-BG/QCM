@@ -13,15 +13,13 @@ import java.util.ArrayList;
  */
 public class Note {
 
-    int id_qcm;
     int id_etu;
     float note;
 
     public Note() {
     }
 
-    public Note( float note, int id_qcm, int id_etu) {
-        this.id_qcm = id_qcm;
+    public Note( float note,  int id_etu) {
         this.id_etu = id_etu;
         this.note = note;
     }
