@@ -386,7 +386,7 @@ public class PanelEtudiant extends JPanel {
 
     }
     
-    public class VisuNotes extends JDialog{
+             public class VisuNotes extends JDialog{
                 
                 private JList espace_note;
                 private JScrollPane jsp;
@@ -409,7 +409,7 @@ public class PanelEtudiant extends JPanel {
                     listemodel = new DefaultListModel();
                     
                     notes = new JPanel();
-                    setLayout(new BorderLayout());
+                    
                     espace_note = new JList(listemodel);
                     espace_note.setLayoutOrientation(JList.VERTICAL);
                     
@@ -469,21 +469,7 @@ public class PanelEtudiant extends JPanel {
                      
                     }
                 }
-                public void placement_notes(){
-                    GridBagConstraints cont = new GridBagConstraints();
-                    cont.gridx=0;
-                    cont.gridy = 1;
-                    cont.anchor = SOUTH;
-                    
-                    for(int i=0; i<20;i++){
-                         JPanel ptpan = new JPanel();
-                          cont.gridx +=i;
-                          
-                                               
-                          
-                    
-                }
-                }
+                
                
             
                 public Qcm trouv_Qcm() throws SQLException{
