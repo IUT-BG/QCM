@@ -126,7 +126,7 @@ public class PanelEtudiant extends JPanel {
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
-                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"), liste_quest, resultSet.getInt("id")));
+                liste_q.add(new Qcm(resultSet.getString("titre"), new Professeur(resultSet.getInt("id_prof")), liste_quest, resultSet.getInt("id")));
                 ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu, n.id_qcm FROM Note n WHERE n.id_qcm ="
                         + resultSet.getString("id") + " AND n.id_etu =" + etu.getId() + " ORDER BY n.id ASC");
                 while (resultSet_note.next()) {
