@@ -82,11 +82,6 @@ public class Qcm {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
         
-        String access = "";
-        for (int i = 0; i < this.prof.getListeClasse().size(); i++) {
-            access += this.prof.getListeClasse().get(i).getNom() + "|";
-        }
-        
         connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\" "+ this.titre +"\", \" "+ prof.getId() +"\", \" " + this.access + " \" )");
         
         ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
