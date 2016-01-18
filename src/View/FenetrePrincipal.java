@@ -12,17 +12,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 
 /**
@@ -39,11 +42,14 @@ public class FenetrePrincipal extends JFrame{
     private JPasswordField p_password;
     private JButton b_login;
     
+    
     public PanelConnexion(Personne pers)
     {
+        //UserInterface
         this.setBackground(new Color(0x34495e));
         l_warning = new JLabel("");
         l_warning.setForeground(Color.red);
+        l_warning.setFont(new Font("Century", 0, 20));
         l_user = new JLabel("Identifiant :");
         l_user.setForeground(Color.white);
         l_user.setFont(new Font("Century", 0, 20));
@@ -51,9 +57,18 @@ public class FenetrePrincipal extends JFrame{
         l_password.setForeground(Color.white);
         l_password.setFont(new Font("Century", 0, 20));
         t_user = new JTextField(8);
-        t_user.setDragEnabled(true);
+        t_user.setForeground(new Color(0x34495e));
+        t_user.setFont(new Font("Century", 0, 20)); 
         p_password = new JPasswordField(8);
+        p_password.setFont(new Font("Century", 0, 20));
+        p_password.setForeground(new Color(0x34495e));
         b_login = new JButton("Valider");
+        b_login.setFont(new Font("century", 0, 20));
+        b_login.setForeground(new Color(0x34495e));
+        b_login.setBorderPainted(false);
+        b_login.setFocusPainted(false);
+        b_login.setBorder(BorderFactory.createBevelBorder(0, new Color(0x34495e), Color.pink));
+        b_login.setBackground(new Color(255,255,255));
         b_login.addActionListener((ActionEvent e) -> {
             if(verifChamp())
             {
@@ -76,6 +91,7 @@ public class FenetrePrincipal extends JFrame{
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.ipadx=20;c.ipady=20;
+        c.insets=new Insets(10, 5, 10, 5);
         c.gridx=0;c.gridy=0;
         c.gridwidth=2;
         this.add(l_warning,c);
@@ -90,6 +106,7 @@ public class FenetrePrincipal extends JFrame{
         this.add(p_password,c);
         c.gridx=0;c.gridy=3;
         c.gridwidth=2;
+        c.fill=GridBagConstraints.HORIZONTAL;
         this.add(b_login,c);
         this.setVisible(true);
     }
