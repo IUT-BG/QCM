@@ -15,7 +15,6 @@ import Model.Professeur;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
-import Test.TestQcm;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -56,7 +55,6 @@ public class PanelEtudiant extends JPanel {
     JPanel liste_qcm;
     JList liste_qcm_etu;
     Etudiant etu;
-    TestQcm test;
     ArrayList<Question> liste_question;
     ArrayList<JRadioButton> liste_radio;
     JScrollPane jsp;
@@ -119,7 +117,7 @@ public class PanelEtudiant extends JPanel {
                     liste_rep = new ArrayList();
                     while ( resultSet_reponse.next() ){
                         liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
-                        System.out.println("ajout rep : "+ resultSet_reponse.getString("intitule"));
+                        System.out.println("ajout HELLO : "+ resultSet_reponse.getString("intitule"));
                         System.out.println(" valide ? : "+resultSet_reponse.getBoolean("valide"));
                         //remplir a liste de rep
                     }
@@ -129,6 +127,16 @@ public class PanelEtudiant extends JPanel {
                 }
                 //remplir la liste de qcm
                 liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest));
+                ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu FROM Note n WHERE n.id_qcm ="
+                        + resultSet.getString("id") + " AND n.id_etu =" + etu.getId() + " ORDER BY n.id ASC");
+                while (resultSet_note.next()) {
+                    for (Qcm q : liste_q) {
+                        if (q.getId() == resultSet_note.getInt("id_qcm")) {
+                            q.ajouterNote(new Note(resultSet_note.getInt("id_etu"), resultSet_note.getInt("note")));
+                            System.out.println("Note add pour le qcm : " + q.getId());
+                        }
+                    }
+                }
             }
             classe.setListe_qcm(liste_q);
             etu.setClasse(classe);
@@ -238,7 +246,7 @@ public class PanelEtudiant extends JPanel {
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté");
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà notEEEé");
                 }
             }
 
