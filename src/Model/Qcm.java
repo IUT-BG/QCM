@@ -47,7 +47,19 @@ public class Qcm {
     }
     
     public void supprimerQcm(){
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect();
         
+        connexion.insert("DELETE FROM Note WHERE id_qcm = "+ this.id);
+        
+        for (int i = 0; i < q.size(); i++) {
+            for (int j = 0; j < q.get(i).getReponse().size(); j++) {
+                connexion.insert("DELETE FROM Note WHERE id_question = "+ q.get(i).getId());
+            }
+            connexion.insert("DELETE FROM Question WHERE id_qcm = "+ this.id);
+        }
+        
+        connexion.insert("DELETE FROM Qcm WHERE id = "+ this.id);
     }
 
     public int getId() {
