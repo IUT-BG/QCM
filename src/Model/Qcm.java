@@ -14,6 +14,7 @@ import java.sql.SQLException;
  * @author toshiba
  */
 public class Qcm {
+
     private int id;
     private String titre;
     private Professeur prof;
@@ -24,14 +25,23 @@ public class Qcm {
         this.titre = titre;
         this.prof = prof;
         this.q = q;
-        this.note = new ArrayList(); 
+        this.note = new ArrayList();
     }
-    
-    public void modifierQcm(ArrayList<Question> nouvelle){
-        if(note == null)
+
+    public Qcm(String titre, Professeur prof, ArrayList<Question> q, int id) {
+        this.titre = titre;
+        this.prof = prof;
+        this.q = q;
+        this.note = new ArrayList();
+        this.id = id;
+    }
+
+    public void modifierQcm(ArrayList<Question> nouvelle) {
+        if (note == null) {
             this.q = nouvelle;
-        else
+        } else {
             System.err.println("Modification ipossible : un élève à déjà rempli ce Qcm");
+        }
     }
 
     public int getId() {
@@ -54,7 +64,7 @@ public class Qcm {
         return q;
     }
 
-    public void setTitre(String titre) { 
+    public void setTitre(String titre) {
         this.titre = titre;
     }
 
