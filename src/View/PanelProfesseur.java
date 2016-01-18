@@ -43,7 +43,6 @@ public class PanelProfesseur extends JPanel{
         
         l_test=new JLabel(pers.toString());
         
-    public PanelProfesseur(Professeur pers) {
         this.pers = pers;
         l_test = new JLabel(pers.toString());
 
