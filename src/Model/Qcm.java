@@ -45,6 +45,10 @@ public class Qcm {
             System.err.println("Modification ipossible : un élève à déjà rempli ce Qcm");
         }
     }
+    
+    public void supprimerQcm(){
+        
+    }
 
     public int getId() {
         return id;

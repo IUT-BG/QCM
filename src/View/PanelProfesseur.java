@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionEvent;
  */
 public class PanelProfesseur extends JPanel{
     
+    private JFrame frame;
     private JButton note;
     private JButton creer;
     private JButton modifier;
@@ -33,17 +34,21 @@ public class PanelProfesseur extends JPanel{
     private JTextField infos;
     
     
-    public PanelProfesseur(Professeur pers){
+    public PanelProfesseur(Professeur pers, JFrame frame){
+        this.frame = frame;
         this.pers=pers;
+        
         l_test=new JLabel(pers.toString());
         
         //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
+        
+        //PanelCreationQcm creer = new PanelCreationQcm(frame, pers);
+        
         this.add(l_test);
+        //this.add(creer);
         this.setVisible(true);
-        
-        
     }
     
 } 

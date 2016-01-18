@@ -147,7 +147,7 @@ public class FenetrePrincipal extends JFrame{
         this.remove(pano); 
         if(pers!=null)
             if(pers.getClass()==Professeur.class)
-                pano=new PanelProfesseur((Professeur)pers);
+                pano=new PanelProfesseur((Professeur)pers, this);
             else
                 pano=new PanelEtudiant((Etudiant)pers);
         this.add(pano);
