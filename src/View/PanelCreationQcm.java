@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package View;
+import Model.Connexion;
+import Model.Professeur;
+import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
 import javax.swing.JPanel;
@@ -13,30 +16,47 @@ import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author toshiba
  */
 public class PanelCreationQcm extends JPanel{
+    private Professeur prof;
     
     private JPanel pan;
+    private JFrame frame;
     
     private JTextField titre;
     private ArrayList<Question> question;
     private ArrayList<JTextField> question_intitule;
     private ArrayList<JTextField> reponse_intitule;
+    private ArrayList<JPanel> question_panel;
+    private int action;
+    
+    private Reponse lock;
+    JTextField rep;
+    JRadioButton juste;
     
     private JButton ajout_question;
     private ArrayList<JButton> ajout_reponse;
+    private ArrayList<JRadioButton> ajout_radio;
+    private int reponse_cumule;
     private int indice;
     
     private JButton valider;
     
-    public PanelCreationQcm(){
+    public PanelCreationQcm(JFrame frame, Professeur prof){
+        this.frame = frame;
+        this.prof = prof;
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -45,8 +65,7 @@ public class PanelCreationQcm extends JPanel{
         
         //initialisation
         init(c);
-        //affichage 1er
-        affichage(c);
+        
         
         ajout_question.addActionListener(new ActionListener(){
 
@@ -55,12 +74,25 @@ public class PanelCreationQcm extends JPanel{
                 pan.removeAll();
                 Question q = new Question();
                 question.add(q);
-                JButton aj = new JButton("+");
+                
+                
+                JTextField t = new JTextField();
+                t.setPreferredSize(new Dimension(200, 20));
+                question_intitule.add(t);
+                
+                JButton aj = new JButton("+ Réponse");
                 ajout_reponse.add(aj);
+                
+                JPanel Q = new JPanel();
+                Q.setBorder(BorderFactory.createTitledBorder("Réponses question " + (question_panel.size()+1)));
+                question_panel.add(Q);
+                    
                 affichage(c);
             }
             
         });
+        //affichage 1er
+        affichage(c);
         
     }
     
@@ -71,58 +103,148 @@ public class PanelCreationQcm extends JPanel{
         question_intitule = new ArrayList();
         reponse_intitule = new ArrayList();
         ajout_reponse = new ArrayList();
+        ajout_radio = new ArrayList();
+        question_panel = new ArrayList();
+        reponse_cumule = 0;
+        action = 0;
         //init des autres éléments
             //JTextField
+        JPanel te = new JPanel();
         titre = new JTextField();
         titre.setPreferredSize(new Dimension(200, 20));
             //JButton
-        ajout_question = new JButton("+");
+        ajout_question = new JButton("+ Question");
         valider = new JButton("Valider");
         //---------------------------
-        this.add(new JLabel("Titre : "), c);
+        te.add(new JLabel("Titre : "), c);
         c.gridx = 1;
-        this.add(titre, c);
+        te.add(titre, c);
         c.gridx = 0;
+        this.add(te);
+        
+        valider.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    if(!Pattern.matches("^$", titre.getText())){
+                        boolean valide = true;
+                        boolean une_reponse_juste = false;
+                        int compteur_reponse = 0;
+                        System.out.println(question.size());
+                        for(int i = 0; i<question.size(); i++){
+                            System.out.println("ok");
+                            if(!Pattern.matches("^$", question_intitule.get(i).getText())){
+                                
+                                for(int j=0; j<question.get(i).getReponse().size(); j++){
+                                    if(Pattern.matches("^$", question_intitule.get(i).getText())){
+                                        question.get(i).getReponse().remove(compteur_reponse);
+                                        reponse_intitule.remove(compteur_reponse);
+                                    }
+                                    else{
+                                        if(ajout_radio.get(compteur_reponse).isSelected() == true)
+                                            une_reponse_juste = true;
+                                    }
+                                    
+                                    compteur_reponse ++;  
+                                }
+                                
+                                if(question.get(i).getReponse().size() < 2)
+                                    valide = false;
+                                
+                                if(!une_reponse_juste)
+                                    valide = false;
+                                
+                                une_reponse_juste = false;  
+                            }
+                            else{
+                                for(int k=0; k<question.get(i).getReponse().size(); k++){
+                                    question.get(i).getReponse().remove(k);
+                                    reponse_intitule.remove(compteur_reponse + k);
+                                }
+                                question.remove(i);
+                                question_intitule.remove(i);
+                                System.out.println(question.size());
+                                i -= 1;
+                                if(question.size() == 0)
+                                    valide = false;
+                            }
+                        }
+                        
+                        
+                        compteur_reponse = 0;
+                        for(int i = 0; i<question.size(); i++){
+                                question.get(i).setIntitule(question_intitule.get(i).getText());
+                                
+                                for(int j=0; j<question.get(i).getReponse().size(); j++){
+                                    //On ajoute la question
+                                    question.get(i).getReponse().get(j).setIntitule(reponse_intitule.get(compteur_reponse).getText());
+                                    question.get(i).getReponse().get(j).setValide(ajout_radio.get(compteur_reponse).isSelected());
+
+                                    compteur_reponse ++; 
+                                }
+                        }
+                        
+                        if(valide){
+                            Qcm qcm = new Qcm(titre.getText(), prof, question);
+                            qcm.publish();
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame,"Pour que le QCM soit validé il doit respécter différentes règle :\n"
+                                                                + "- Chaque question doit avoir au moins 2 réponse\n"
+                                                                + "- Chaque question doit avoir au moins 1 réponse juste\n"
+                                                                + "- Le QCM doit avoir au moins une question\n",
+                                    "Inane warning",JOptionPane.WARNING_MESSAGE);
+                    }
+                    else
+                        JOptionPane.showMessageDialog(frame,"Vous devez rentrer un titre au QCM !","Inane warning",JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        
     }
     
     public void affichage(GridBagConstraints c){
-        pan.setLayout(new GridBagLayout());
-        GridBagConstraints cQ = new GridBagConstraints();
-        cQ.gridx = 0;
-        cQ.gridy = 0;
         
-        System.out.println(ajout_reponse.size());
-        System.out.println(question.size());
+        pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
         
         for(int i=0; i<question.size(); i++){
+            JPanel panelQ = new JPanel();
+            
             //titre
-            JTextField t = new JTextField();
-            t.setPreferredSize(new Dimension(200, 20));
-            question_intitule.add(t);
-            cQ.gridy++;
-            pan.add(new JLabel("Question" + i + " : "), cQ);
-            cQ.gridx = 1;
-            pan.add(t, cQ);
-            cQ.gridx = 0;
             
-            //reponsess
+            panelQ.add(new JLabel("Question" + (i+1) + " : "));
+            panelQ.add(question_intitule.get(i));
+            
+            //reponsses
+            
+            question_panel.get(i).setLayout(new GridBagLayout());
+            GridBagConstraints cR = new GridBagConstraints();
+            cR.gridy = cR.gridx = 0;
+            
             for(int j=0; j<question.get(i).getReponse().size(); j++){
-                cQ.gridy++;
-                pan.add(reponse_intitule.get(j), cQ);
+               
+                cR.gridy = j;
+                question_panel.get(i).add(reponse_intitule.get(reponse_cumule), cR);
                 
-                JRadioButton radio = new JRadioButton("juste");
-                cQ.gridx = 1;
-                pan.add(radio, cQ);
-                cQ.gridx = 0;
+                cR.gridx = 1;
+                question_panel.get(i).add(ajout_radio.get(reponse_cumule), cR);
+                cR.gridx = 0;
+                
+                reponse_cumule ++;
             }
-            cQ.gridy++;
-            pan.add(ajout_reponse.get(i), cQ);
+            panelQ.add(question_panel.get(i));
+            panelQ.add(ajout_reponse.get(i));
             
-            c.gridy++;
+            //panelQ.repaint();
             
-            this.add(pan, c);
+            
+            pan.add(panelQ);
         }
+        reponse_cumule = 0;
         
+        
+        c.gridy ++ ;
+        this.add(pan, c);
         //bouttons
         c.gridy++;
         c.fill = GridBagConstraints.BOTH;
@@ -133,29 +255,37 @@ public class PanelCreationQcm extends JPanel{
         c.gridy++;
         this.add(valider, c);
         
-        this.setVisible(true);
         this.validate();
+        this.setVisible(true);
+       
         
         //------------Action Liseners----------//////////
-        for(indice=0; indice<ajout_reponse.size(); indice++){
-            
+        for(indice=action; indice<ajout_reponse.size(); indice++){
+            action ++ ;
+            int var = indice;
             (ajout_reponse.get(indice)).addActionListener(new ActionListener(){
-
+                
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    
+                    lock = new Reponse();
+                    rep = new JTextField();
+                    juste = new JRadioButton("Juste");
+                    
                     pan.removeAll();
-                    JTextField rep = new JTextField();
                     rep.setPreferredSize(new Dimension(200, 20));
                     reponse_intitule.add(rep);
                     
+                    ajout_radio.add(juste);
                     //On rentre une reponse pour l'aspet graphique
-                    Reponse lock = new Reponse();
-                    question.get(indice-1).setReponse(lock);
+                    
+                    question.get(var).setReponse(lock);
                     
                     affichage(c);
                 }
             });
         }
         /////////-------------------------//////////////////
+
     }
 }

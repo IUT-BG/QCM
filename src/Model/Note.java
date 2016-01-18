@@ -19,7 +19,7 @@ public class Note {
     public Note() {
     }
 
-    public Note(int id_etu, float note) {
+    public Note( float note,  int id_etu) {
         this.id_etu = id_etu;
         this.note = note;
     }

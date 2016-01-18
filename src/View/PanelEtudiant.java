@@ -15,7 +15,6 @@ import Model.Professeur;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
-import Test.TestQcm;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -49,6 +48,8 @@ import javax.swing.ListModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -62,7 +63,6 @@ public class PanelEtudiant extends JPanel {
     JPanel liste_qcm;
     JList liste_qcm_etu;
     Etudiant etu;
-    TestQcm test;
     ArrayList<Question> liste_question;
     ArrayList<JRadioButton> liste_radio;
     JScrollPane jsp;
@@ -80,10 +80,10 @@ public class PanelEtudiant extends JPanel {
         //peut etre mettre dans etudiant et mettre load classe dans classe
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
-        
+
         Connexion connexion_quest = new Connexion("QCM.sqlite");
         connexion_quest.connect();
-        
+
         Connexion connexion_rep = new Connexion("QCM.sqlite");
         connexion_rep.connect();
         //faire l'identification etu
@@ -111,34 +111,44 @@ public class PanelEtudiant extends JPanel {
                     + " WHERE Classe.intitule = '" + classe.getNom()
                     + "' AND Classe.intitule = Qcm.access ORDER BY Qcm.id ASC ");
             System.out.println(resultSet_qcm);
-            
+
             ArrayList<Reponse> liste_rep = new ArrayList();
             ArrayList<Qcm> liste_q = new ArrayList();
             ArrayList<Question> liste_quest = new ArrayList();
-            
+
             while (resultSet_qcm.next()) {
-                System.out.println("On fait le QCM avec un id : "+resultSet.getString("id"));
-                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm ="+resultSet.getString("id")+" ORDER BY q.id ASC");
+                System.out.println("On fait le QCM avec un id : " + resultSet.getString("id"));
+                ResultSet resultSet_question = connexion_quest.query("SELECT q.intitule, q.id FROM Question q WHERE q.id_qcm =" + resultSet.getString("id") + " ORDER BY q.id ASC");
                 liste_quest = new ArrayList();
                 while (resultSet_question.next()) {
-                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question ="+resultSet_question.getString("id")+" ORDER BY r.id ASC");
+                    ResultSet resultSet_reponse = connexion_rep.query("SELECT r.intitule, r.valide FROM Reponse r WHERE id_question =" + resultSet_question.getString("id") + " ORDER BY r.id ASC");
                     liste_rep = new ArrayList();
-                    while ( resultSet_reponse.next() ){
-                        liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"),resultSet_reponse.getBoolean("valide")));
-                        System.out.println("ajout rep : "+ resultSet_reponse.getString("intitule"));
-                        System.out.println(" valide ? : "+resultSet_reponse.getBoolean("valide"));
+                    while (resultSet_reponse.next()) {
+                        liste_rep.add(new Reponse(resultSet_reponse.getString("intitule"), resultSet_reponse.getBoolean("valide")));
+                        System.out.println("ajout HELLO : " + resultSet_reponse.getString("intitule"));
+                        System.out.println(" valide ? : " + resultSet_reponse.getBoolean("valide"));
                         //remplir a liste de rep
                     }
-                    liste_quest.add(new Question(resultSet_question.getString("intitule"),liste_rep));
-                    System.out.println("ajout question : "+ resultSet_question.getString("intitule"));
+                    liste_quest.add(new Question(resultSet_question.getString("intitule"), liste_rep));
+                    System.out.println("ajout question : " + resultSet_question.getString("intitule"));
                     //remplir la liste de questions
                 }
                 //remplir la liste de qcm
-                liste_q.add(new Qcm(resultSet.getString("titre"), resultSet.getInt("id_prof"),liste_quest));
+                liste_q.add(new Qcm(resultSet.getString("titre"), new Professeur(resultSet.getInt("id_prof")), liste_quest, resultSet.getInt("id")));
+                ResultSet resultSet_note = connexion_quest.query("SELECT n.note, n.id_etu, n.id_qcm FROM Note n WHERE n.id_qcm ="
+                        + resultSet.getString("id") + " AND n.id_etu =" + etu.getId() + " ORDER BY n.id ASC");
+                while (resultSet_note.next()) {
+                    for (Qcm q : liste_q) {
+                        if (q.getId() == resultSet_note.getInt("id_qcm")) {
+                            q.ajouterNote(new Note(resultSet_note.getInt("note"), resultSet_note.getInt("id_etu")));
+                            System.out.println("Note add pour le qcm : " + q.getId());
+                        }
+                    }
+                }
             }
             classe.setListe_qcm(liste_q);
             etu.setClasse(classe);
-            
+
             //etu.setQcm(liste_q.get(0));
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,7 +162,7 @@ public class PanelEtudiant extends JPanel {
         if (parentWindow instanceof Frame) {
             parentFrame = (Frame) parentWindow;
         }
-        
+
         etu.setQcm(null);
         affiche_qcm = new JPanel();
         liste_question = new ArrayList();
@@ -232,15 +242,15 @@ public class PanelEtudiant extends JPanel {
                 Qcm qcm_test = null;
                 int i = 0;
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
-                    System.out.println("SI : "+q.getTitre()+" est egale avec : "+etu.getClasse().getListe_qcm().get(i).getTitre());
+                    System.out.println("SI : " + q.getTitre() + " est egale avec : " + etu.getClasse().getListe_qcm().get(i).getTitre());
                     i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
-                        System.out.println("OUI");
                     }
-                   
+
                 }
                 EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
+                x.test();
                 //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
@@ -251,10 +261,12 @@ public class PanelEtudiant extends JPanel {
 
         });
         this.add(bt_Effectuer, c);
-        
+
+        this.setVisible(true);
+
         bt_note.addActionListener(new ActionListener() {
 
-           @Override
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()== bt_note){
                     try {
@@ -273,13 +285,15 @@ public class PanelEtudiant extends JPanel {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
 
         for (Qcm qc : etu.getClasse().getListe_qcm()) {
-            ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+                ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+            
         }
     }
 
     public void affQcm() {
-        if(etu.getQcm() == null)
+        if (etu.getQcm() == null) {
             return;
+        }
         affiche_qcm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -325,7 +339,7 @@ public class PanelEtudiant extends JPanel {
             c.gridy = c.gridy + 1;
             c.gridx = 0;
         }
-        c.gridy ++;
+        c.gridy++;
         c.gridx = 0;
 
         JButton bt_valid = new JButton("Valider");
@@ -343,8 +357,8 @@ public class PanelEtudiant extends JPanel {
                     JOptionPane.showMessageDialog(parentFrame, "Veuillez completer le qcm en entier.");
                     return;
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé.");
-                    Note n = new Note(etu.getId(), final_note);
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm validé. Titire & id du QCM : " + etu.getQcm().getTitre() + " " + etu.getQcm().getId());
+                    Note n = new Note(final_note, etu.getId());
                     etu.getQcm().ajouterNote(n);
                     n.addNote(etu);
                     etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
@@ -364,6 +378,8 @@ public class PanelEtudiant extends JPanel {
             return;
         }
         affQcm();
+        affiche_qcm.repaint();
+        affiche_qcm.validate();
     }
 
     public void selectQcm() {
@@ -395,10 +411,19 @@ public class PanelEtudiant extends JPanel {
                     notes = new JPanel();
                     setLayout(new BorderLayout());
                     espace_note = new JList(listemodel);
-                    espace_note.clearSelection();
-                    espace_note.setFocusable(false);
                     espace_note.setLayoutOrientation(JList.VERTICAL);
-                    espace_note.setVisibleRowCount(5);
+                    
+                    espace_note.setFocusable(false);
+                    espace_note.setVisibleRowCount(14);
+                    
+                    espace_note.addListSelectionListener(new ListSelectionListener() {
+
+                        @Override
+                        public void valueChanged(ListSelectionEvent e) {
+                           espace_note.clearSelection();
+                        }
+                    });
+                    
                     jsp=new JScrollPane(espace_note);
                     jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
                     jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -431,7 +456,16 @@ public class PanelEtudiant extends JPanel {
                         listemodel.addElement(s);
                         s="Note: "+Float.toString(etu.voirNotes().get(i))+"";
                         listemodel.addElement(s);
-                        listemodel.addElement("");
+                        s="";
+                        listemodel.addElement(s);
+                        s="-----------------------------------------------------";
+                        listemodel.addElement(s);
+                        s="";
+                        listemodel.addElement(s);
+
+                        
+                        
+                       
                      
                     }
                 }
@@ -445,11 +479,7 @@ public class PanelEtudiant extends JPanel {
                          JPanel ptpan = new JPanel();
                           cont.gridx +=i;
                           
-                          if(i>=1){
-                            listemodel.addElement("dfdslkfskljfsljk");
-                          
-                          } 
-                          
+                                               
                           
                     
                 }
@@ -467,7 +497,7 @@ public class PanelEtudiant extends JPanel {
                     id = res.getInt("id");
                     
                     titre = res.getString("titre");
-                    temp = new Qcm(titre);
+                    temp = new Qcm(titre,null,null);
                     return temp;
                 }
              public String trouv_prof() throws SQLException{
