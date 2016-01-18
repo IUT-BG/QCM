@@ -26,7 +26,7 @@ public class VerifReponse {
 
     public VerifReponse(ArrayList<Question> liste_question,
             ArrayList<JRadioButton> liste_radio, Qcm qcm) {
-        
+
         this.liste_question = liste_question;
         this.liste_radio = liste_radio;
         this.qcm = qcm;
@@ -42,17 +42,19 @@ public class VerifReponse {
         for (Question q : liste_question) {
             for (Reponse r : liste_question.get(question).getReponse()) {
                 if (r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    System.out.println("reponse valide : " + r.getIntitule());
                     note++;
                 } else if (!r.isValide() && liste_radio.get(reponse).isSelected()) {
+                    System.out.println("reponse fausse : " + r.getIntitule());
+                    System.out.println(r.isValide());
                     note--;
-                }
-                else if(!liste_radio.get(reponse).isSelected()){
+                } else if (!liste_radio.get(reponse).isSelected()) {
                     case_vide++;
                 }
                 liste_reponse.add(r);
                 reponse++;
             }
-            if(case_vide == liste_question.get(question).getReponse().size()){
+            if (case_vide == liste_question.get(question).getReponse().size()) {
                 question_manquante = true;
             }
             case_vide = 0;
@@ -74,8 +76,8 @@ public class VerifReponse {
         }
         return score / r * 20;
     }
-    
-    public boolean getNonValide(){
+
+    public boolean getNonValide() {
         return question_manquante;
     }
 }

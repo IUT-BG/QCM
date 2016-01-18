@@ -19,14 +19,17 @@ public class EffectuerQcm {
     Etudiant etu;
 
     public EffectuerQcm(Qcm qcm, Etudiant etu) {
+        if (qcm == null) {
+            return;
+        }
         this.qcm = qcm;
         this.etu = etu;
-        test();
     }
 
     public void test() {
         if (etu.getQcm() != null) {
             System.out.println("Veuillez terminer votre Qcm avant d'en commencer un nouveau.");
+            return;
         } else {
             try {
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
@@ -35,14 +38,19 @@ public class EffectuerQcm {
                             if (n.getId_etu() == etu.getId()) {
                                 if (n.getNote() >= 0) {
                                     //qcm deja effectué
+                                    System.out.println("Qcm deja effectué");
                                     return;
-                                }
-                                else{
-                                    //qcm pas effectué
+                                } else {
+                                    System.out.println("etu.setQcm(qcm) normalement viser par l'utilisateur");
                                     etu.setQcm(qcm);
                                     return;
                                 }
                             }
+                        }
+                        if (qcm.getNote().isEmpty()) {
+                            System.out.println("etu.setQcm(qcm) normalement viser par l'utilisateur");
+                            etu.setQcm(qcm);
+                            return;
                         }
                     }
                 }

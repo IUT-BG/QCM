@@ -33,17 +33,19 @@ public class PanelProfesseur extends JPanel{
     
     private ArrayList<JButton> note;
     private JButton creer;
-    private ArrayList<JButton> modifier;
-    private ArrayList<JButton> supprimer;
-    private JPanel pano;
-    private Professeur p;
-    
-    private ArrayList<JLabel> titre;
-    
-    
-    public PanelProfesseur(){
-        
-        //Contrainte de positionnement
+    private JButton modifier;
+    private JButton supprimer;
+    private Professeur pers;
+
+    public JLabel l_test;
+
+    private JTextField infos;
+
+    public PanelProfesseur(Professeur pers) {
+        this.pers = pers;
+        l_test = new JLabel(pers.toString());
+
+        //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
         
@@ -160,5 +162,5 @@ public class PanelProfesseur extends JPanel{
         this.repaint();
         
     }
-    
-} 
+
+}
