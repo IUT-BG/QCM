@@ -61,13 +61,15 @@ public class PanelCreationQcm extends JPanel {
     private JComboBox classes;
 
     private JButton valider;
+    
+    GridBagConstraints c;
 
     public PanelCreationQcm(JFrame frame, Professeur prof) {
         this.frame = frame;
         this.prof = prof;
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
 
@@ -93,13 +95,11 @@ public class PanelCreationQcm extends JPanel {
                 Q.setBorder(BorderFactory.createTitledBorder("Réponses question " + (question_panel.size() + 1)));
                 question_panel.add(Q);
 
-                affichage(c);
+                affichage();
             }
 
         });
         //affichage 1er
-        affichage(c);
-
     }
 
     public void init(GridBagConstraints c) {
@@ -135,7 +135,7 @@ public class PanelCreationQcm extends JPanel {
         }
 
         classes = new JComboBox(s);
-
+        connexion.close();
         //---------------------------
         te.add(new JLabel("Titre : "), c);
         c.gridx = 1;
@@ -210,6 +210,8 @@ public class PanelCreationQcm extends JPanel {
                     if (valide) {
                         Qcm qcm = new Qcm(titre.getText(), prof, question, classes.getItemAt(classes.getSelectedIndex()).toString());
                         qcm.publish();
+                        JOptionPane.showMessageDialog(frame, "Le QCM à bien été créé");
+                        
                     } else {
                         JOptionPane.showMessageDialog(frame, "Pour que le QCM soit validé il doit respécter différentes règle :\n"
                                 + "- Chaque question doit avoir au moins 2 réponse\n"
@@ -220,12 +222,14 @@ public class PanelCreationQcm extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(frame, "Vous devez rentrer un titre au QCM !", "Inane warning", JOptionPane.WARNING_MESSAGE);
                 }
+                pan.removeAll();
+                affichage();
             }
         });
 
     }
 
-    public void affichage(GridBagConstraints c) {
+    public void affichage() {
 
         pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
 
@@ -297,7 +301,7 @@ public class PanelCreationQcm extends JPanel {
 
                     question.get(var).setReponse(lock);
 
-                    affichage(c);
+                    affichage();
                 }
             });
         }

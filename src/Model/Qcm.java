@@ -86,7 +86,7 @@ public class Qcm {
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
 
-        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\" " + this.titre + "\", \" " + prof.getId() + "\", \" " + this.access + " \" )");
+        connexion.insert("INSERT INTO Qcm (titre, id_prof, access) VALUES(\"" + this.titre + "\", " + prof.getId() + ", \"" + this.access + "\" )");
 
         ResultSet new_id = connexion.query("SELECT COUNT(*) FROM Qcm");
         try {
@@ -96,7 +96,7 @@ public class Qcm {
 
         int id_q = 0;
         for (int i = 0; i < this.q.size(); i++) {
-            connexion.insert("INSERT INTO Question (intitule, id_qcm) VALUES(\" " + this.q.get(i).getIntitule() + " \", \" " + this.id + " \" )");
+            connexion.insert("INSERT INTO Question (intitule, id_qcm) VALUES(\"" + this.q.get(i).getIntitule() + "\", " + this.id + " )");
 
             ResultSet new_q = connexion.query("SELECT COUNT(*) FROM Question");
             try {
@@ -105,9 +105,10 @@ public class Qcm {
             }
 
             for (int j = 0; j < this.q.get(i).getReponse().size(); j++) {
-                connexion.insert("INSERT INTO Reponse (intitule, id_question, valide) VALUES(\" " + this.q.get(i).getReponse().get(j).getIntitule() + " \", \" " + id_q + " \", \" " + this.q.get(i).getReponse().get(j).isValide() + " \" )");
+                connexion.insert("INSERT INTO Reponse (intitule, id_question, valide) VALUES(\"" + this.q.get(i).getReponse().get(j).getIntitule() + "\", " + id_q + ", \"" + this.q.get(i).getReponse().get(j).isValide() + "\" )");
             }
         }
+        connexion.close();
     }
 
 }
