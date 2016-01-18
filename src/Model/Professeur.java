@@ -36,7 +36,7 @@ public class Professeur extends Personne{
     
     public ArrayList<String> voirQcm(){
         
-            Connexion connexion = new Connexion("Z:\\Documents\\NetBeansProjects\\QCM\\QCM.sqlite");
+            Connexion connexion = new Connexion("QCM.sqlite");
             connexion.connect();
             
             ArrayList<String> liste = new ArrayList<String>();

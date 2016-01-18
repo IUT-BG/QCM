@@ -234,7 +234,6 @@ public class PanelEtudiant extends JPanel {
                 Qcm qcm_test = null;
                 int i = 0;
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
-                    System.out.println("SI : " + q.getTitre() + " est egale avec : " + etu.getClasse().getListe_qcm().get(i).getTitre());
                     i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
@@ -243,11 +242,10 @@ public class PanelEtudiant extends JPanel {
                 }
                 EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
                 x.test();
-                //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
                 } else {
-                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté");
+                    JOptionPane.showMessageDialog(parentFrame, "Qcm déjà noté /ou/ Veuillez terminer votre qcm");
                 }
             }
 
@@ -271,10 +269,8 @@ public class PanelEtudiant extends JPanel {
 
     public void ajoutListe() {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
-
         for (Qcm qc : etu.getClasse().getListe_qcm()) {
                 ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
-            
         }
     }
 
@@ -349,7 +345,7 @@ public class PanelEtudiant extends JPanel {
                     Note n = new Note(final_note, etu.getId());
                     etu.getQcm().ajouterNote(n);
                     n.addNote(etu);
-                    etu.setQcm(null);//faire en sorte qu'il ne puisse pas reselectionner ce qcm
+                    etu.setQcm(null);
 
                     rafraichissement();
                 }
@@ -399,15 +395,7 @@ public class PanelEtudiant extends JPanel {
             }
             placement_notes();
         }
-
-        /*public void remplir_liste( ArrayList<Float> lNotes){
-         JLabel lab =new JLabel();
-         for(int i = 0; i<lNotes.size(); i++){
-         liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(lNotes.get(i)));
-         }
-                    
-                    
-         }*/
+        
         public void placement_notes() {
             GridBagConstraints cont = new GridBagConstraints();
             for (int i = 0; i < liste.size(); i++) {

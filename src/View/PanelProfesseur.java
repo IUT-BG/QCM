@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package View;
+
 import Model.Professeur;
 import Model.Qcm;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import java.awt.event.*;
 import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import javax.swing.event.ListSelectionEvent;
+
 /**
  *
  * @author toshiba
@@ -28,10 +30,11 @@ public class PanelProfesseur extends JPanel{
     private JButton modifier;
     private JButton supprimer;
     private Professeur pers;
-    
+
     public JLabel l_test;
-    
+
     private JTextField infos;
+
     
     
     public PanelProfesseur(Professeur pers, JFrame frame){
@@ -40,6 +43,10 @@ public class PanelProfesseur extends JPanel{
         
         l_test=new JLabel(pers.toString());
         
+    public PanelProfesseur(Professeur pers) {
+        this.pers = pers;
+        l_test = new JLabel(pers.toString());
+
         //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
@@ -50,5 +57,5 @@ public class PanelProfesseur extends JPanel{
         //this.add(creer);
         this.setVisible(true);
     }
-    
-} 
+
+}

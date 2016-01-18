@@ -10,17 +10,18 @@ package Model;
  * @author toshiba
  */
 public class Reponse {
+
     private String intitule;
     private boolean valide;
-    
-    public Reponse(){
-        
+
+    public Reponse() {
+
     }
 
     public Reponse(String intitule, boolean valide) {
         this.intitule = intitule;
         this.valide = valide;
-    } 
+    }
 
     public String getIntitule() {
         return intitule;
@@ -37,6 +38,5 @@ public class Reponse {
     public void setValide(boolean valide) {
         this.valide = valide;
     }
-    
-    
+
 }
