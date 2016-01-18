@@ -63,6 +63,7 @@ public class PanelEtudiant extends JPanel {
     public PanelEtudiant(Etudiant etu) {
         this.etu=etu;
         initialisation();
+        initialisation_bd();
         affQcm();
         ajoutListe();
 
@@ -83,15 +84,15 @@ public class PanelEtudiant extends JPanel {
          test = qcm actuel
          classe
          */
-        ResultSet resultSet = connexion.query("SELECT nom, prenom, id "
+        /*ResultSet resultSet = connexion.query("SELECT nom, prenom, id "
                 + "FROM Personne WHERE id='1'");
         try {
             etu = new Etudiant(resultSet.getString("nom"),
                     resultSet.getString("prenom"), resultSet.getInt("id"));
         } catch (SQLException ex) {
             Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        resultSet = connexion.query("SELECT intitule"
+        }*/
+        ResultSet resultSet = connexion.query("SELECT intitule"
                 + " FROM Classe "
                 + "INNER JOIN Personne "
                 + "WHERE Personne.id = " + etu.getId()
