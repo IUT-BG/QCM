@@ -30,7 +30,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PanelProfesseur extends JPanel{
     
-    private ArrayList<JButton> note;
+    private JFrame frame;
+    private JButton note;
     private JButton creer;
     private ArrayList<JButton> modifier;
     private ArrayList<JButton> supprimer;
@@ -42,6 +43,14 @@ public class PanelProfesseur extends JPanel{
 
     private JTextField infos;
 
+    
+    
+    public PanelProfesseur(Professeur pers, JFrame frame){
+        this.frame = frame;
+        this.pers=pers;
+        
+        l_test=new JLabel(pers.toString());
+        
     public PanelProfesseur(Professeur pers) {
         this.pers = pers;
         l_test = new JLabel(pers.toString());
