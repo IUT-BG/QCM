@@ -18,9 +18,9 @@ import java.util.logging.Logger;
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
 
-    public Professeur() {
+    public Professeur(String nom, String prenom, int id) {
+        super(nom,prenom,id);
     }
-    
     public ArrayList<Note> voirResultats(Qcm qcm){
         return qcm.getNote();
     }
@@ -50,5 +50,8 @@ public class Professeur extends Personne{
         for(int i=0; i<liste.size(); i++)
             System.out.println(liste.get(i));
     }
-       
+    public String toString()
+    {
+        return id+" - "+prenom+" "+nom+", Prof";
+    }
 }  

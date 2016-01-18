@@ -60,8 +60,8 @@ public class PanelEtudiant extends JPanel {
     ArrayList<JRadioButton> liste_radio;
     JScrollPane jsp;
 
-    public PanelEtudiant() {
-
+    public PanelEtudiant(Etudiant etu) {
+        this.etu=etu;
         initialisation();
         affQcm();
         ajoutListe();
@@ -84,8 +84,6 @@ public class PanelEtudiant extends JPanel {
         t_classe.setNum("2nd2");
 
         affiche_qcm = new JPanel();
-
-        etu = new Etudiant(t_classe, "Magand", "Louis", 1);
         etu.setQcm(test.getQcm());
 
         liste_question = new ArrayList();
