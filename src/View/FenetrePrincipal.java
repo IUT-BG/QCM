@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package View;
+import Model.Professeur;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -21,9 +22,9 @@ public class FenetrePrincipal extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setLocationRelativeTo(null);
         
-        PanelCreationQcm pan = new PanelCreationQcm();
+        PanelCreationQcm pan = new PanelCreationQcm(this, new Professeur());
         this.add(pan);
-        this.add(panel_etu);
+        //this.add(panel_etu);
         
         initialisation();
         rafraichir();
