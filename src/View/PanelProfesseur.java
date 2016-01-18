@@ -25,10 +25,15 @@ import javax.swing.event.ListSelectionEvent;
 public class PanelProfesseur extends JPanel{
     
     private JFrame frame;
-    private JButton note;
+    
+    private JPanel actif;
+    private ArrayList<JLabel> nom_qcm;
+    private ArrayList<JButton> note;
     private JButton creer;
-    private JButton modifier;
-    private JButton supprimer;
+    private JButton gerer;
+    private ArrayList<JButton> modifier;
+    private ArrayList<JButton> supprimer;
+    
     private Professeur pers;
 
     public JLabel l_test;
@@ -41,20 +46,63 @@ public class PanelProfesseur extends JPanel{
         this.frame = frame;
         this.pers=pers;
         
-        l_test=new JLabel(pers.toString());
+        /*l_test=new JLabel(pers.toString());
         
         this.pers = pers;
-        l_test = new JLabel(pers.toString());
+        l_test = new JLabel(pers.toString());*/
 
         //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
+        global.gridx = global.gridy = 0;
         
-        //PanelCreationQcm creer = new PanelCreationQcm(frame, pers);
+        //PanelCreationQcm pan = new PanelCreationQcm(frame, pers);
         
-        this.add(l_test);
-        //this.add(creer);
+        init();
+        
+        global.fill = GridBagConstraints.BOTH;
+        this.add(creer, global);
+        global.gridx = 1;
+        this.add(gerer, global);
+        global.gridx = 0;
+        
+        global.gridy = 1;
+        global.gridwidth = 2;
+        this.add(actif, global);
+        
+        //this.add(l_test);
         this.setVisible(true);
+    }
+    
+    public void init(){
+        //Allocation de la mémoire
+            nom_qcm = new ArrayList();
+            note = new ArrayList();
+            modifier = new ArrayList();
+            supprimer = new ArrayList();
+            
+            actif = new JPanel();
+            actif.setVisible(true);
+            actif.setPreferredSize(new Dimension(700, 500));
+            actif.setBorder(BorderFactory.createTitledBorder("Réponses question "));
+            
+            creer = new JButton("Nouveau QCM");
+            gerer = new JButton("Gérer les QCM");
+            
+            creer.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    actif.removeAll();
+                    actif.add(new PanelCreationQcm(frame, pers));
+                    actif.validate();
+                }
+            });
+    }
+    
+    public void update(){
+        actif.removeAll();
+        
     }
 
 }

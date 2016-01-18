@@ -103,7 +103,7 @@ public class PanelCreationQcm extends JPanel {
     }
 
     public void init(GridBagConstraints c) {
-
+        this.setPreferredSize(new Dimension(700, 500));
         this.pan = new JPanel();
         //init des ArrayList---------
         question = new ArrayList();
