@@ -22,6 +22,12 @@ public class Qcm {
     private ArrayList<Question> q;
     private String access;
 
+    public Qcm(String titre, Professeur prof, ArrayList<Question> question) {
+        this.titre = titre;
+        this.prof = prof;
+        this.q = question;
+    }
+
     public Qcm(String titre, Professeur prof, ArrayList<Question> q, String classe) {
         this.titre = titre;
         this.prof = prof;
