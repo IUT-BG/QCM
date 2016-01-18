@@ -100,6 +100,7 @@ public class PanelCreationQcm extends JPanel {
 
         });
         //affichage 1er
+        affichage();
     }
 
     public void init(GridBagConstraints c) {
@@ -140,13 +141,11 @@ public class PanelCreationQcm extends JPanel {
         te.add(new JLabel("Titre : "), c);
         c.gridx = 1;
         te.add(titre, c);
+        c.gridx++;
+        te.add(new JLabel(" Classe : "), c);
+        te.add(classes, c);
         c.gridx = 0;
         this.add(te);
-        c.gridx = 1;
-        this.add(new JLabel("Classe : "), c);
-        c.gridx ++ ;
-        this.add(classes, c);
-        c.gridx = 0;
 
         valider.addActionListener(new ActionListener() {
 

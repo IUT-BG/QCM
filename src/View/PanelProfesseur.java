@@ -70,6 +70,8 @@ public class PanelProfesseur extends JPanel{
         global.gridwidth = 2;
         this.add(actif, global);
         
+        
+        
         //this.add(l_test);
         this.setVisible(true);
     }
