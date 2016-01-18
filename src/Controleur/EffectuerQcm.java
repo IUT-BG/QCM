@@ -25,7 +25,7 @@ public class EffectuerQcm {
         this.qcm = qcm;
         this.etu = etu;
     }
-    
+
     public void test() {
         if (etu.getQcm() != null) {
             System.out.println("Veuillez terminer votre Qcm avant d'en commencer un nouveau.");
