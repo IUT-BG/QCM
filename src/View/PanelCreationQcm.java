@@ -131,11 +131,9 @@ public class PanelCreationQcm extends JPanel{
                         boolean valide = true;
                         boolean une_reponse_juste = false;
                         int compteur_reponse = 0;
-                        
-                        if(question.size() == 0)
-                            valide = false;
-                        
+                        System.out.println(question.size());
                         for(int i = 0; i<question.size(); i++){
+                            System.out.println("ok");
                             if(!Pattern.matches("^$", question_intitule.get(i).getText())){
                                 
                                 for(int j=0; j<question.get(i).getReponse().size(); j++){
@@ -166,6 +164,10 @@ public class PanelCreationQcm extends JPanel{
                                 }
                                 question.remove(i);
                                 question_intitule.remove(i);
+                                System.out.println(question.size());
+                                i -= 1;
+                                if(question.size() == 0)
+                                    valide = false;
                             }
                         }
                         

@@ -17,8 +17,13 @@ import java.util.logging.Logger;
  */
 public class Professeur extends Personne{
     private ArrayList<Classe> liste_classe;
-
+    int id;
+    
     public Professeur() {
+    }
+    
+    public Professeur(int id) {
+        this.id = id;
     }
     
     public ArrayList<Note> voirResultats(Qcm qcm){
@@ -53,5 +58,9 @@ public class Professeur extends Personne{
     
     public ArrayList<Classe> getListeClasse(){
         return this.liste_classe;
+    }
+    
+    public int getId(){
+        return this.id;
     }
 }  
