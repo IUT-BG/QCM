@@ -156,7 +156,8 @@ public class PanelEtudiant extends JPanel {
     }
 
     public void initialisation() {
-
+        this.setPreferredSize(new Dimension(800, 600));
+        
         Window parentWindow = SwingUtilities.windowForComponent(this);
         parentFrame = null;
         if (parentWindow instanceof Frame) {
