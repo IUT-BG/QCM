@@ -70,10 +70,10 @@ public class PanelEtudiant extends JPanel {
 
     public PanelEtudiant(Etudiant etu) {
         this.etu=etu;
+        initialisation_bd();
         initialisation();
         affQcm();
         ajoutListe();
-
     }
 
     public void initialisation_bd() {
@@ -397,10 +397,8 @@ public class PanelEtudiant extends JPanel {
                     init();
                     this.pack();
                     this.setVisible(true);
-                    
-                  
-                    
                 }
+                
                 public void init() throws SQLException{
                     
                     this.setLayout(new GridBagLayout());
@@ -424,14 +422,18 @@ public class PanelEtudiant extends JPanel {
                     });
                     
                     jsp=new JScrollPane(espace_note);
+                    jsp.setPreferredSize(new Dimension(200, 200));
                     jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
                     jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
                     
                     add(jsp);
                     
                     remplir();
+                    
+                    espace_note.setPreferredSize(new Dimension(300, espace_note.countComponents()*800));
+                    System.out.println(espace_note.getSize().height);
                    
-                    setPreferredSize(new Dimension(330,150));
+                    setPreferredSize(new Dimension(500,300));
                     
                 }
                 
