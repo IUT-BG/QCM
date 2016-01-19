@@ -38,7 +38,6 @@ public class PanelProfesseur extends JPanel{
     private ArrayList<JButton> note;
     private JButton creer;
     private JButton gerer;
-    private ArrayList<JButton> modifier;
     private ArrayList<JButton> supprimer;
     
     private Professeur pers;
@@ -69,7 +68,6 @@ public class PanelProfesseur extends JPanel{
         //Allocation de la mémoire
             nom_qcm = new ArrayList();
             note = new ArrayList();
-            modifier = new ArrayList();
             supprimer = new ArrayList();
             
             actif = new JPanel();
@@ -88,6 +86,108 @@ public class PanelProfesseur extends JPanel{
                     actif.validate();
                 }
             });
+            
+            titre = new ArrayList<JLabel>();
+
+            ArrayList<String> liste = pers.voirQcm();
+            
+            GridBagConstraints global = new GridBagConstraints();
+            global.gridx = global.gridy = 0;
+            
+            for(int i=0;i<liste.size(); i++){
+                titre.add(new JLabel(liste.get(i)));
+                note.add(new JButton("Notes"));
+                supprimer.add(new JButton("Supprimer"));
+                
+                global.gridy = i;
+                global.gridx = 0;
+                this.add(titre.get(i), global);
+
+                global.gridx++;
+                this.add(note.get(i), global);
+
+                global.gridx++;
+                this.add(supprimer.get(i), global);
+
+                note.get(i).addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //pour savoir sur quel boutton on a cliqué.
+                        int indx = note.indexOf( e.getSource() );
+                        initpano(indx);
+                    }
+                });
+            }
+    }
+    public void initpano(int ind){
+        
+        pano = new JPanel();
+        ArrayList<Note> liste_notes = new ArrayList<Note>();
+            
+        Connexion connexion = new Connexion("QCM.sqlite");
+        connexion.connect();
+            
+        ResultSet resultSet = connexion.query("SELECT * FROM Note WHERE id_qcm="+Integer.toString(pers.getId_qcm().get(ind))+";");
+        try {
+            while (resultSet.next()) {
+                liste_notes.add(new Note(resultSet.getFloat("note"),resultSet.getInt("id_etu")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String nom_classe="";
+        resultSet = connexion.query("SELECT access FROM Qcm WHERE id="+Integer.toString(pers.getId_qcm().get(ind))+";");
+        try {
+            while (resultSet.next()) {
+                nom_classe = resultSet.getString("access");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        ArrayList<String> liste_etu = new ArrayList<String>();
+        ArrayList<Integer> liste_id = new ArrayList<Integer>();
+        //On remplit la liste pour avoir le nom des étudiants
+        resultSet = connexion.query("SELECT id,nom FROM Personne WHERE classe="+nom_classe+";");
+        try {
+            while (resultSet.next()) {
+                liste_etu.add(resultSet.getString("nom"));
+                liste_id.add(resultSet.getInt("id"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        String col[] = {"Classe","Etudiant","Note"};
+        System.out.println(liste_notes.size());
+        DefaultTableModel tableModel = new DefaultTableModel(null,col);
+        for(int i=0; i<liste_etu.size(); i++){
+            String nom = liste_etu.get(i);
+            String note="";
+            if(liste_id.get(i) == liste_notes.get(i).getId_etu())
+                note = Float.toString(liste_notes.get(i).getNote());
+            else
+                note = "Qcm non effectué";
+            
+            Object[] data = {nom, note};
+            
+            tableModel.addRow(data);
+        }
+        
+        JScrollPane scrollPane = new JScrollPane();
+        pano.add(scrollPane, BorderLayout.CENTER);
+        JTable table = new JTable(tableModel);
+        scrollPane.setViewportView(table);
+        
+        this.removeAll();
+        this.add(pano);
+        this.setPreferredSize(new Dimension(550,600));
+        this.repaint();
+        
     }
     
     public void update(){
@@ -97,4 +197,3 @@ public class PanelProfesseur extends JPanel{
     }
 
 }
-        init();
