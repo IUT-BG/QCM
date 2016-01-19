@@ -23,11 +23,10 @@ public class Professeur extends Personne{
 
     public Professeur(String nom, String prenom, int id) {
         super(nom,prenom,id);
+        id_qcm = new ArrayList<Integer>();
     }
     
     public Professeur() {
-        id = 0;
-        id_qcm = new ArrayList<Integer>();
     }
     
     public Professeur(int id) {

@@ -60,7 +60,7 @@ public class PanelProfesseur extends JPanel{
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = global.gridy = 0;
         
-        
+        init();
         l_test = new JLabel("  " + pers.getNom() + "   " + pers.getPrenom() + "  ");
     }
     
@@ -123,6 +123,7 @@ public class PanelProfesseur extends JPanel{
     public void initpano(int ind){
         
         pano = new JPanel();
+        JButton retour = new JButton("Retour");
         ArrayList<Note> liste_notes = new ArrayList<Note>();
             
         Connexion connexion = new Connexion("QCM.sqlite");
@@ -148,11 +149,11 @@ public class PanelProfesseur extends JPanel{
         }
         
         
-        
+        System.out.println(nom_classe);
         ArrayList<String> liste_etu = new ArrayList<String>();
         ArrayList<Integer> liste_id = new ArrayList<Integer>();
         //On remplit la liste pour avoir le nom des étudiants
-        resultSet = connexion.query("SELECT id,nom FROM Personne WHERE classe="+nom_classe+";");
+        resultSet = connexion.query("SELECT id,nom FROM Personne WHERE classe = '"+nom_classe+"' AND prof!=1;");
         try {
             while (resultSet.next()) {
                 liste_etu.add(resultSet.getString("nom"));
@@ -163,17 +164,23 @@ public class PanelProfesseur extends JPanel{
         }
         
         String col[] = {"Classe","Etudiant","Note"};
-        System.out.println(liste_notes.size());
+        System.out.println(liste_etu.size());
         DefaultTableModel tableModel = new DefaultTableModel(null,col);
         for(int i=0; i<liste_etu.size(); i++){
             String nom = liste_etu.get(i);
             String note="";
-            if(liste_id.get(i) == liste_notes.get(i).getId_etu())
-                note = Float.toString(liste_notes.get(i).getNote());
-            else
-                note = "Qcm non effectué";
+            if(liste_notes.size()>0){
+                if(liste_id.get(i) == liste_notes.get(i).getId_etu()){
+                    note = Float.toString(liste_notes.get(i).getNote());
+                    System.out.println(Float.toString(liste_notes.get(i).getNote()));
+                }
+                else
+                    note = "Qcm non effectué";
+            }
+             else
+                    note = "Qcm non effectué";
             
-            Object[] data = {nom, note};
+            Object[] data = {nom_classe,nom, note};
             
             tableModel.addRow(data);
         }
@@ -183,17 +190,30 @@ public class PanelProfesseur extends JPanel{
         JTable table = new JTable(tableModel);
         scrollPane.setViewportView(table);
         
+        retour.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                retour();
+            }
+        });
+        
         this.removeAll();
         this.add(pano);
-        this.setPreferredSize(new Dimension(550,600));
+        this.add(retour);
         this.repaint();
         
     }
     
     public void update(){
         actif.removeAll();
-        
         actif.validate();
+    }
+    
+    public void retour(){
+       this.removeAll();
+       init();
+       this.repaint();
     }
 
 }
