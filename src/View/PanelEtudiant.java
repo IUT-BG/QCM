@@ -392,6 +392,7 @@ public class PanelEtudiant extends JPanel {
                 private JScrollPane jsp;
                 DefaultListModel listemodel;
                 private JPanel notes;
+                private ArrayList<Qcm> liste_qcm;
                 
                 public VisuNotes() throws SQLException{
                     super(parentFrame,"notes de l'étudiant "+etu.getPrenom()+" "+etu.getNom(),true);
@@ -431,7 +432,7 @@ public class PanelEtudiant extends JPanel {
                     
                     remplir();
                     
-                    espace_note.setPreferredSize(new Dimension(300, espace_note.countComponents()*800));
+                    espace_note.setPreferredSize(new Dimension(300, espace_note.countComponents()*1000));
                     System.out.println(espace_note.getSize().height);
                    
                     setPreferredSize(new Dimension(500,300));
@@ -447,13 +448,16 @@ public class PanelEtudiant extends JPanel {
                     
                 }*/
                 public void remplir() throws SQLException{
+                    liste_qcm = new ArrayList();
+                    trouv_Qcm();
+                    
                     String s ="";
                      for(int i = 0; i<etu.voirNotes().size(); i++){
                         listemodel.addElement("");
                         
-                        s="Qcm: "+trouv_Qcm().getTitre();
+                        s="Qcm: "+liste_qcm.get(i).getTitre();
                         listemodel.addElement(s);
-                        s="enseignant: "+trouv_prof();
+                        s="enseignant: "+liste_qcm.get(i).getProf().getNom() + " " + liste_qcm.get(i).getProf().getPrenom();
                         listemodel.addElement(s);
                         s="Note: "+Float.toString(etu.voirNotes().get(i))+"";
                         listemodel.addElement(s);
@@ -463,29 +467,24 @@ public class PanelEtudiant extends JPanel {
                         listemodel.addElement(s);
                         s="";
                         listemodel.addElement(s);
-
-                        
-                        
-                       
-                     
                     }
                 }
                 
                
             
-                public Qcm trouv_Qcm() throws SQLException{
-                    Qcm temp;
+                public void trouv_Qcm() throws SQLException{
                     int id, idp;
-                    String titre;
+                    liste_qcm.clear();
+                    String titre = null;
                     Connexion conex = new Connexion("QCM.sqlite");
                     conex.connect();
-                    ResultSet res = conex.query("SELECT Q.id, titre, id_prof FROM Qcm Q "
-                            +"INNER JOIN Note N WHERE Q.id = N.id_qcm; ");
+                    ResultSet res = conex.query("SELECT Q.id, titre, id_prof, p.nom, p.prenom FROM Qcm as Q "
+                            +"LEFT JOIN Note as N ON Q.id = N.id_qcm LEFT JOIN Personne as p ON p.id = id_prof WHERE N.id_etu = "+ etu.getId() +"; ");
                     id = res.getInt("id");
-                    
-                    titre = res.getString("titre");
-                    temp = new Qcm(titre,null,null);
-                    return temp;
+                    while(res.next()){
+                        titre = res.getString("titre");
+                        liste_qcm.add(new Qcm(titre,new Professeur(res.getString("nom"), res.getString("prenom"),0), null));
+                    }
                 }
              public String trouv_prof() throws SQLException{
                  
