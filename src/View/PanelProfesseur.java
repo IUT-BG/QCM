@@ -74,6 +74,7 @@ public class PanelProfesseur extends JPanel{
             actif.setVisible(true);
             actif.setPreferredSize(new Dimension(1200, 500));
             
+            System.out.println("cc");
             creer = new JButton("Nouveau QCM");
             gerer = new JButton("Gérer les QCM");
             
@@ -200,8 +201,10 @@ public class PanelProfesseur extends JPanel{
         
         this.removeAll();
         this.add(pano);
+        frame.setPreferredSize(new Dimension(700,800));
+        frame.pack();
         this.add(retour);
-        this.repaint();
+        this.updateUI();
         
     }
     
@@ -213,7 +216,7 @@ public class PanelProfesseur extends JPanel{
     public void retour(){
        this.removeAll();
        init();
-       this.repaint();
+       this.updateUI();
     }
 
 }
