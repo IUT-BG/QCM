@@ -16,6 +16,7 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
+import javafx.scene.layout.Border;
 import javax.swing.event.ListSelectionEvent;
 
 /**
@@ -46,28 +47,24 @@ public class PanelProfesseur extends JPanel{
         this.frame = frame;
         this.pers=pers;
         
-        /*l_test=new JLabel(pers.toString());
-        
-        this.pers = pers;
-        l_test = new JLabel(pers.toString());*/
+        l_test = new JLabel("  " + pers.getNom() + "   " + pers.getPrenom() + "  ");
 
         //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = global.gridy = 0;
         
-        //PanelCreationQcm pan = new PanelCreationQcm(frame, pers);
-        
         init();
         
-        global.fill = GridBagConstraints.BOTH;
         this.add(creer, global);
         global.gridx = 1;
         this.add(gerer, global);
+        global.gridx++;
+        this.add(l_test, global);
         global.gridx = 0;
         
         global.gridy = 1;
-        global.gridwidth = 2;
+        global.gridwidth = 3;
         this.add(actif, global);
         
         
@@ -85,8 +82,7 @@ public class PanelProfesseur extends JPanel{
             
             actif = new JPanel();
             actif.setVisible(true);
-            actif.setPreferredSize(new Dimension(700, 500));
-            actif.setBorder(BorderFactory.createTitledBorder("Réponses question "));
+            actif.setPreferredSize(new Dimension(1200, 500));
             
             creer = new JButton("Nouveau QCM");
             gerer = new JButton("Gérer les QCM");
@@ -105,6 +101,7 @@ public class PanelProfesseur extends JPanel{
     public void update(){
         actif.removeAll();
         
+        actif.validate();
     }
 
 }

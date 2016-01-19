@@ -37,6 +37,7 @@ import java.lang.String;
 public class PanelCreationQcm extends JPanel {
 
     private Professeur prof;
+    JScrollPane scroll_pane;
 
     private JPanel pan;
     private JFrame frame;
@@ -71,7 +72,7 @@ public class PanelCreationQcm extends JPanel {
         this.setLayout(new GridBagLayout());
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 0;
+        c.gridy = 0;    
 
         //initialisation
         init(c);
@@ -104,7 +105,7 @@ public class PanelCreationQcm extends JPanel {
     }
 
     public void init(GridBagConstraints c) {
-        this.setPreferredSize(new Dimension(700, 500));
+        this.setPreferredSize(new Dimension(1500, 500));
         this.pan = new JPanel();
         //init des ArrayList---------
         question = new ArrayList();
@@ -124,6 +125,13 @@ public class PanelCreationQcm extends JPanel {
         //JButton
         ajout_question = new JButton("+ Question");
         valider = new JButton("Valider");
+        valider.setPreferredSize(new Dimension(300, 30));
+        //JScrollPane
+        scroll_pane = new JScrollPane(pan);
+        scroll_pane.setPreferredSize(new Dimension(1200, 200));
+        scroll_pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        c.gridy = 2;
+        this.add(scroll_pane, c);
         //JComboBox
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
@@ -275,15 +283,18 @@ public class PanelCreationQcm extends JPanel {
             pan.add(panelQ);
         }
         reponse_cumule = 0;
-
-        c.gridy++;
-        this.add(pan, c);
+        
+        this.pan.setPreferredSize(new Dimension(1300, question.size()*50+reponse_intitule.size()*30));
+        
+        scroll_pane.setViewportView(pan);
+        
         //bouttons
         c.gridy++;
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth = 2;
         this.add(ajout_question, c);
-
+        
+        c.fill = GridBagConstraints.NONE;
         c.gridwidth = 1;
         c.gridy++;
         this.add(valider, c);
