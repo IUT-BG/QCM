@@ -33,6 +33,7 @@ public class Professeur extends Personne{
     public Professeur(int id) {
         this.id = id;
     }
+    
     public ArrayList<Note> voirResultats(Qcm qcm){
         return qcm.getNote();
     }

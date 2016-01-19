@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
+import javafx.scene.layout.Border;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
@@ -31,10 +32,15 @@ import javax.swing.table.DefaultTableModel;
 public class PanelProfesseur extends JPanel{
     
     private JFrame frame;
+    
+    private JPanel actif;
+    private ArrayList<JLabel> nom_qcm;
     private ArrayList<JButton> note;
     private JButton creer;
+    private JButton gerer;
     private ArrayList<JButton> modifier;
     private ArrayList<JButton> supprimer;
+    
     private Professeur pers;
     private ArrayList<JLabel> titre;
     private JPanel pano;
@@ -49,120 +55,46 @@ public class PanelProfesseur extends JPanel{
         this.frame = frame;
         this.pers=pers;
         
-        this.pers = pers;
-        l_test = new JLabel(pers.toString());
 
         //Cont  rainte de positionnement
         this.setLayout(new GridBagLayout());
         GridBagConstraints global = new GridBagConstraints();
+        global.gridx = global.gridy = 0;
         
-        note = new ArrayList<JButton>();
-        modifier = new ArrayList<JButton>();
-        supprimer = new ArrayList<JButton>();
-        titre = new ArrayList<JLabel>();
-        creer = new JButton();
         
-        ArrayList<String> liste = pers.voirQcm();
-        
-        for(int i=0;i<liste.size(); i++){
-            titre.add(new JLabel(liste.get(i)));
-            note.add(new JButton("Notes"));
-            creer.add(new JButton("Creer"));
-            modifier.add(new JButton("Modifier"));
-            supprimer.add(new JButton("Supprimer"));
+        l_test = new JLabel("  " + pers.getNom() + "   " + pers.getPrenom() + "  ");
+    }
+    
+    public void init(){
+        //Allocation de la mémoire
+            nom_qcm = new ArrayList();
+            note = new ArrayList();
+            modifier = new ArrayList();
+            supprimer = new ArrayList();
             
-            global.gridy = i;
-            global.gridx = 0;
-            this.add(titre.get(i), global);
+            actif = new JPanel();
+            actif.setVisible(true);
+            actif.setPreferredSize(new Dimension(1200, 500));
             
-            global.gridx++;
-            this.add(note.get(i), global);
+            creer = new JButton("Nouveau QCM");
+            gerer = new JButton("Gérer les QCM");
             
-            global.gridx++;
-            this.add(modifier.get(i), global);
-            
-            global.gridx++;
-            this.add(supprimer.get(i), global);
-            
-            note.get(i).addActionListener(new ActionListener() {
+            creer.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //pour savoir sur quel boutton on a cliqué.
-                    int indx = note.indexOf( e.getSource() );
-                    initpano(indx);
+                    actif.removeAll();
+                    actif.add(new PanelCreationQcm(frame, pers));
+                    actif.validate();
                 }
             });
-        }
     }
-    public void initpano(int ind){
+    
+    public void update(){
+        actif.removeAll();
         
-        pano = new JPanel();
-        ArrayList<Note> liste_notes = new ArrayList<Note>();
-            
-        Connexion connexion = new Connexion("QCM.sqlite");
-        connexion.connect();
-            
-        ResultSet resultSet = connexion.query("SELECT * FROM Note WHERE id_qcm="+Integer.toString(pers.getId_qcm().get(ind))+";");
-        try {
-            while (resultSet.next()) {
-                liste_notes.add(new Note(resultSet.getFloat("note"),resultSet.getInt("id_etu")));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String nom_classe="";
-        resultSet = connexion.query("SELECT access FROM Qcm WHERE id="+Integer.toString(pers.getId_qcm().get(ind))+";");
-        try {
-            while (resultSet.next()) {
-                nom_classe = resultSet.getString("access");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        
-        ArrayList<String> liste_etu = new ArrayList<String>();
-        ArrayList<Integer> liste_id = new ArrayList<Integer>();
-        //On remplit la liste pour avoir le nom des étudiants
-        resultSet = connexion.query("SELECT id,nom FROM Personne WHERE classe="+nom_classe+";");
-        try {
-            while (resultSet.next()) {
-                liste_etu.add(resultSet.getString("nom"));
-                liste_id.add(resultSet.getInt("id"));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Professeur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String col[] = {"Classe","Etudiant","Note"};
-        System.out.println(liste_notes.size());
-        DefaultTableModel tableModel = new DefaultTableModel(null,col);
-        for(int i=0; i<liste_etu.size(); i++){
-            String nom = liste_etu.get(i);
-            String note="";
-            if(liste_id.get(i) == liste_notes.get(i).getId_etu())
-                note = Float.toString(liste_notes.get(i).getNote());
-            else
-                note = "Qcm non effectué";
-            
-            Object[] data = {nom, note};
-            
-            tableModel.addRow(data);
-        }
-        
-        JScrollPane scrollPane = new JScrollPane();
-        pano.add(scrollPane, BorderLayout.CENTER);
-        JTable table = new JTable(tableModel);
-        scrollPane.setViewportView(table);
-        
-        this.removeAll();
-        this.add(pano);
-        this.setPreferredSize(new Dimension(550,600));
-        this.repaint();
-        
+        actif.validate();
     }
 
 }
+        init();

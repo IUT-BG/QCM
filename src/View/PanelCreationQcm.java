@@ -37,6 +37,7 @@ import java.lang.String;
 public class PanelCreationQcm extends JPanel {
 
     private Professeur prof;
+    JScrollPane scroll_pane;
 
     private JPanel pan;
     private JFrame frame;
@@ -61,15 +62,17 @@ public class PanelCreationQcm extends JPanel {
     private JComboBox classes;
 
     private JButton valider;
+    
+    GridBagConstraints c;
 
     public PanelCreationQcm(JFrame frame, Professeur prof) {
         this.frame = frame;
         this.prof = prof;
         //Contrainte de positionnement
         this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 0;
+        c.gridy = 0;    
 
         //initialisation
         init(c);
@@ -93,17 +96,16 @@ public class PanelCreationQcm extends JPanel {
                 Q.setBorder(BorderFactory.createTitledBorder("Réponses question " + (question_panel.size() + 1)));
                 question_panel.add(Q);
 
-                affichage(c);
+                affichage();
             }
 
         });
         //affichage 1er
-        affichage(c);
-
+        affichage();
     }
 
     public void init(GridBagConstraints c) {
-
+        this.setPreferredSize(new Dimension(1500, 500));
         this.pan = new JPanel();
         //init des ArrayList---------
         question = new ArrayList();
@@ -123,23 +125,41 @@ public class PanelCreationQcm extends JPanel {
         //JButton
         ajout_question = new JButton("+ Question");
         valider = new JButton("Valider");
+        valider.setPreferredSize(new Dimension(300, 30));
+        //JScrollPane
+        scroll_pane = new JScrollPane(pan);
+        scroll_pane.setPreferredSize(new Dimension(1200, 200));
+        scroll_pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        c.gridy = 2;
+        this.add(scroll_pane, c);
         //JComboBox
         Connexion connexion = new Connexion("QCM.sqlite");
         connexion.connect();
-        ResultSet result_classes = connexion.query("SELECT classe FROM Personne WHERE id = "+ prof.getId());
         
+        ResultSet result_count = connexion.query("SELECT COUNT(*) FROM Classe");
         String[] s = null;
+        
         try {
-            s = (result_classes.getString("classe")).split("|");
+            s = new String[result_count.getInt("COUNT(*)")];
+            ResultSet result_classes = connexion.query("SELECT intitule FROM Classe");
+            
+            int i=0;
+            while(result_classes.next()){
+                s[i] = (result_classes.getString("intitule"));
+                i++;
+            }
         } catch (SQLException ex) {
         }
 
         classes = new JComboBox(s);
-
+        connexion.close();
         //---------------------------
         te.add(new JLabel("Titre : "), c);
         c.gridx = 1;
         te.add(titre, c);
+        c.gridx++;
+        te.add(new JLabel(" Classe : "), c);
+        te.add(classes, c);
         c.gridx = 0;
         this.add(te);
 
@@ -210,6 +230,8 @@ public class PanelCreationQcm extends JPanel {
                     if (valide) {
                         Qcm qcm = new Qcm(titre.getText(), prof, question, classes.getItemAt(classes.getSelectedIndex()).toString());
                         qcm.publish();
+                        JOptionPane.showMessageDialog(frame, "Le QCM à bien été créé");
+                        
                     } else {
                         JOptionPane.showMessageDialog(frame, "Pour que le QCM soit validé il doit respécter différentes règle :\n"
                                 + "- Chaque question doit avoir au moins 2 réponse\n"
@@ -220,12 +242,14 @@ public class PanelCreationQcm extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(frame, "Vous devez rentrer un titre au QCM !", "Inane warning", JOptionPane.WARNING_MESSAGE);
                 }
+                pan.removeAll();
+                affichage();
             }
         });
 
     }
 
-    public void affichage(GridBagConstraints c) {
+    public void affichage() {
 
         pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
 
@@ -259,15 +283,18 @@ public class PanelCreationQcm extends JPanel {
             pan.add(panelQ);
         }
         reponse_cumule = 0;
-
-        c.gridy++;
-        this.add(pan, c);
+        
+        this.pan.setPreferredSize(new Dimension(1300, question.size()*50+reponse_intitule.size()*30));
+        
+        scroll_pane.setViewportView(pan);
+        
         //bouttons
         c.gridy++;
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth = 2;
         this.add(ajout_question, c);
-
+        
+        c.fill = GridBagConstraints.NONE;
         c.gridwidth = 1;
         c.gridy++;
         this.add(valider, c);
@@ -297,7 +324,7 @@ public class PanelCreationQcm extends JPanel {
 
                     question.get(var).setReponse(lock);
 
-                    affichage(c);
+                    affichage();
                 }
             });
         }

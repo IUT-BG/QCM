@@ -15,9 +15,12 @@ import Model.Professeur;
 import Model.Qcm;
 import Model.Question;
 import Model.Reponse;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
+import static java.awt.GridBagConstraints.PAGE_START;
+import static java.awt.GridBagConstraints.SOUTH;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
@@ -40,8 +43,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -62,10 +70,10 @@ public class PanelEtudiant extends JPanel {
 
     public PanelEtudiant(Etudiant etu) {
         this.etu=etu;
+        initialisation_bd();
         initialisation();
         affQcm();
         ajoutListe();
-
     }
 
     public void initialisation_bd() {
@@ -234,6 +242,7 @@ public class PanelEtudiant extends JPanel {
                 Qcm qcm_test = null;
                 int i = 0;
                 for (Qcm q : etu.getClasse().getListe_qcm()) {
+                    System.out.println("SI : " + q.getTitre() + " est egale avec : " + etu.getClasse().getListe_qcm().get(i).getTitre());
                     i++;
                     if (q.getTitre().equals(liste_qcm_etu.getSelectedValue())) {
                         qcm_test = q;
@@ -242,6 +251,7 @@ public class PanelEtudiant extends JPanel {
                 }
                 EffectuerQcm x = new EffectuerQcm(qcm_test, etu);
                 x.test();
+                //faut tester si test() de effectuer qcm renvoie qql chose; sinon...
                 if (etu.getQcm() == qcm_test) {
                     rafraichissement();
                 } else {
@@ -258,9 +268,13 @@ public class PanelEtudiant extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == bt_note) {
-                    VisuNotes notes = new VisuNotes();
-
+                if(e.getSource()== bt_note){
+                    try {
+                        VisuNotes notes = new VisuNotes();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelEtudiant.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
                 }
             }
         });
@@ -271,6 +285,7 @@ public class PanelEtudiant extends JPanel {
         ((DefaultListModel) liste_qcm_etu.getModel()).removeAllElements();
         for (Qcm qc : etu.getClasse().getListe_qcm()) {
                 ((DefaultListModel) liste_qcm_etu.getModel()).addElement(qc.getTitre());
+            
         }
     }
 
@@ -369,42 +384,122 @@ public class PanelEtudiant extends JPanel {
     public void selectQcm() {
 
     }
+    
+             public class VisuNotes extends JDialog{
+                
+                private JList espace_note;
+                private JScrollPane jsp;
+                DefaultListModel listemodel;
+                private JPanel notes;
+                
+                public VisuNotes() throws SQLException{
+                    super(parentFrame,"notes de l'étudiant "+etu.getPrenom()+" "+etu.getNom(),true);
+                    init();
+                    this.pack();
+                    this.setVisible(true);
+                }
+                
+                public void init() throws SQLException{
+                    
+                    this.setLayout(new GridBagLayout());
+                    this.setLocationRelativeTo(parentFrame);
+                    listemodel = new DefaultListModel();
+                    
+                    notes = new JPanel();
+                    
+                    espace_note = new JList(listemodel);
+                    espace_note.setLayoutOrientation(JList.VERTICAL);
+                    
+                    espace_note.setFocusable(false);
+                    espace_note.setVisibleRowCount(14);
+                    
+                    espace_note.addListSelectionListener(new ListSelectionListener() {
 
-    public class VisuNotes extends JDialog {
+                        @Override
+                        public void valueChanged(ListSelectionEvent e) {
+                           espace_note.clearSelection();
+                        }
+                    });
+                    
+                    jsp=new JScrollPane(espace_note);
+                    jsp.setPreferredSize(new Dimension(200, 200));
+                    jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+                    jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                    
+                    add(jsp);
+                    
+                    remplir();
+                    
+                    espace_note.setPreferredSize(new Dimension(300, espace_note.countComponents()*800));
+                    System.out.println(espace_note.getSize().height);
+                   
+                    setPreferredSize(new Dimension(500,300));
+                    
+                }
+                
+                /*public void remplir_liste( ArrayList<Float> lNotes){
+                   JLabel lab =new JLabel();
+                    for(int i = 0; i<lNotes.size(); i++){
+                        liste.get(i).setText("Note n°"+(i+1)+": "+Float.toString(lNotes.get(i)));
+                    }
+                    
+                    
+                }*/
+                public void remplir() throws SQLException{
+                    String s ="";
+                     for(int i = 0; i<etu.voirNotes().size(); i++){
+                        listemodel.addElement("");
+                        
+                        s="Qcm: "+trouv_Qcm().getTitre();
+                        listemodel.addElement(s);
+                        s="enseignant: "+trouv_prof();
+                        listemodel.addElement(s);
+                        s="Note: "+Float.toString(etu.voirNotes().get(i))+"";
+                        listemodel.addElement(s);
+                        s="";
+                        listemodel.addElement(s);
+                        s="-----------------------------------------------------";
+                        listemodel.addElement(s);
+                        s="";
+                        listemodel.addElement(s);
 
-        private ArrayList<JLabel> liste;
-
-        public VisuNotes() {
-            super(parentFrame, "notes de l'étudiant n°" + etu.getId(), true);
-            liste = new ArrayList<>();
-
-            init();
-            this.pack();
-            this.setVisible(true);
-
-        }
-
-        public void init() {
-            this.setLayout(new GridBagLayout());
-            this.setLocationRelativeTo(parentFrame);
-
-            for (int i = 0; i < etu.voirNotes().size(); i++) {
-                liste.add(new JLabel());
-                liste.get(i).setText("Note n°" + (i + 1) + ": " + Float.toString(etu.voirNotes().get(i)));
-
-            }
-            placement_notes();
-        }
-        
-        public void placement_notes() {
-            GridBagConstraints cont = new GridBagConstraints();
-            for (int i = 0; i < liste.size(); i++) {
-                cont.gridx = 0;
-                cont.gridy = 1 + i;
-                this.add(liste.get(i), cont);
-            }
-        }
-
+                        
+                        
+                       
+                     
+                    }
+                }
+                
+               
+            
+                public Qcm trouv_Qcm() throws SQLException{
+                    Qcm temp;
+                    int id, idp;
+                    String titre;
+                    Connexion conex = new Connexion("QCM.sqlite");
+                    conex.connect();
+                    ResultSet res = conex.query("SELECT Q.id, titre, id_prof FROM Qcm Q "
+                            +"INNER JOIN Note N WHERE Q.id = N.id_qcm; ");
+                    id = res.getInt("id");
+                    
+                    titre = res.getString("titre");
+                    temp = new Qcm(titre,null,null);
+                    return temp;
+                }
+             public String trouv_prof() throws SQLException{
+                 
+                 
+                 String nom, prenom;
+                 Connexion co = new Connexion("QCM.sqlite");
+                 co.connect();
+                 ResultSet res = co.query("SELECT nom, prenom FROM Personne P "
+                            +"INNER JOIN Qcm Q WHERE P.id = Q.id_prof;");
+                 nom= res.getString("nom");
+                 prenom=res.getString("prenom");
+                    
+                 
+                 return nom +" "+ prenom;
+             }
     }
-
 }
+    
